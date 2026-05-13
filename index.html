@@ -435,6 +435,38 @@ window.onload = () => {
     document.getElementById("resultScreen").style.display = "block";
     document.getElementById("displayPlayerName").innerText = playerName;
     document.getElementById("finalScore").innerText = toBN(score);
+    let rank = "";
+let star = "";
+let color = "";
+
+if (score >= 45) {
+    rank = "🥇 গোল্ড মেডেলিস্ট ";
+    star = "⭐⭐⭐⭐⭐";
+    color = "#FFD700"; // গোল্ডেন কালার
+} else if (score >= 35) {
+    rank = "🥈 সিলভার মেডেলিস্ট ";
+    star = "⭐⭐⭐⭐";
+    color = "#C0C0C0"; // সিলভার কালার
+} else if (score >= 25) {
+    rank = "🥉 ব্রোঞ্জ মেডেলিস্ট ";
+    star = "⭐⭐⭐";
+    color = "#CD7F32"; // ব্রোঞ্জ কালার
+} else {
+    rank = "🎖️ শিক্ষানবিশ ";
+    star = "⭐";
+    color = "#18661F"; // থিম কালার
+}
+
+// ফলাফল স্ক্রিনে দেখানোর জন্য
+const rankHTML = `
+    <div style="margin: 15px 0; padding: 15px; border: 2px solid ${color}; border-radius: 15px; background: rgba(255,255,255,0.5);">
+        <h3 style="color: ${color}; margin-bottom: 5px;">${rank}</h3>
+        <div style="font-size: 20px;">${star}</div>
+    </div>
+`;
+
+// এটি রেজাল্ট স্ক্রিনের যেকোনো জায়গায় যোগ করুন
+document.getElementById("resultScreen").insertAdjacentHTML('afterbegin', rankHTML);
     
     // --- কনফেটি অ্যানিমেশন শুরু ---
     if (score >= 40) { // যদি ৪০ এর বেশি পায়
