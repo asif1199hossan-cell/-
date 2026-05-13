@@ -225,16 +225,20 @@ body.dark-mode {
 
 <script>
 function shareResult() {
-    const shareText = `আমি গাউসিয়া কমিটি বাংলাদেশ (ঘাষি মাঝির পাড়া ইউনিট) আয়োজিত ইসলামিক কুইজে ৫০-এ ${toBN(score)} পেয়েছি! \nআপনি কত পাবেন? আপনার জ্ঞান যাচাই করতে নিচের লিঙ্কে ক্লিক করুন: \n\n[এখানে আপনার কুইজ সাইটের লিঙ্ক দিন]`;
+    const mySiteLink = "https://asif1199hossan-cell.github.io/-/"; 
+    const scoreValue = typeof score !== 'undefined' ? score : 0;
 
-    // যদি ব্রাউজার শেয়ার অপশন সাপোর্ট করে (যেমন মোবাইল Chrome/Safari)
+    const shareText = `আমি গাউসিয়া কমিটি বাংলাদেশ (ঘাষি মাঝির পাড়া ইউনিট) আয়োজিত ইসলামিক কুইজে ৫০-এ ${scoreValue} পেয়েছি! \nআপনার জ্ঞান যাচাই করতে নিচের লিঙ্কে ক্লিক করুন: \n\n${mySiteLink}`;
+
     if (navigator.share) {
         navigator.share({
             title: 'ইসলামিক কুইজ ফলাফল',
             text: shareText,
-            url: window.location.href
+            url: mySiteLink
         }).catch(err => console.log('Error sharing:', err));
-    } else {
+    } 
+
+else {
         // যদি সাপোর্ট না করে, তবে সরাসরি হোয়াটসঅ্যাপে পাঠিয়ে দিবে
         const waUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
         window.open(waUrl, '_blank');
