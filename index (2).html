@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js">
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গাউসিয়া কমিটি | কুইজ কম্পিটিশন</title>
+    <style>
+        :root {
+            --primary: #18661F;
+            --secondary: #1e3c72;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --gold: #f1c40f;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SolaimanLipi', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #18661F, #1e3c72, #2a5298, #0f2027);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            color: #333;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-container {
+            background: var(--glass);
+            border-radius: 30px;
+            padding: 30px 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+        }
+
+        .prize-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .prize-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 10px 6px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .prize-card.gold {
+            background: linear-gradient(135deg, #ffe259, #ffa751);
+            color: #333;
+        }
+
+        .prize-card.silver {
+            background: linear-gradient(135deg, #e0e0e0, #bdbdbd);
+            color: #333;
+        }
+
+        .prize-card.bronze {
+            background: linear-gradient(135deg, #ffcc80, #ffa726);
+            color: #333;
+        }
+
+        .prize-card .trophy { font-size: 20px; }
+        .prize-card .amount { font-size: 14px; font-weight: bold; }
+        .prize-card .label { font-size: 10px; color: #666; }
+
+        .entry-section {
+            background: #f8f9fa;
+            border-radius: 14px;
+            padding: 14px;
+            margin: 10px 0;
+            border: 2px dashed var(--primary);
+        }
+
+        .entry-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: #333;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .entry-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .entry-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .entry-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .btn-entry {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-entry:hover { transform: scale(1.02); }
+        .btn-entry:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .status-message {
+            padding: 8px;
+            border-radius: 8px;
+            margin: 6px 0;
+            font-weight: bold;
+            font-size: 12px;
+            display: none;
+        }
+
+        .status-message.success { display: block; background: #d4edda; color: #155724; }
+        .status-message.error { display: block; background: #f8d7da; color: #721c24; }
+        .status-message.pending { display: block; background: #fff3cd; color: #856404; }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .name-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .name-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 10px rgba(24, 102, 31, 0.2);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: 0.2s;
+        }
+
+        .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .lifelines-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin: 8px 0 12px 0;
+        }
+
+        .lifeline-btn {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #eee;
+            color: #555;
+        }
+
+        .lifeline-btn:hover:not(:disabled) { transform: scale(1.05); }
+        .lifeline-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .lifeline-btn.ll-5050 { background: #e1f5fe; color: #0288d1; }
+        .lifeline-btn.ll-time { background: #fff3e0; color: #e65100; }
+        .lifeline-btn.ll-answer { background: #e8f5e9; color: #2e7d32; }
+        .lifeline-btn.ll-poll { background: #fce4ec; color: #c62828; }
+        .lifeline-btn.ll-guard { background: #f3e5f5; color: #6a1b9a; }
+
+        .lifeline-btn.active { box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); }
+        .lifeline-btn.ll-5050.active { background: #0288d1; color: white; }
+        .lifeline-btn.ll-time.active { background: #e65100; color: white; }
+        .lifeline-btn.ll-answer.active { background: #2e7d32; color: white; }
+        .lifeline-btn.ll-poll.active { background: #c62828; color: white; }
+        .lifeline-btn.ll-guard.active { background: #6a1b9a; color: white; }
+        
+        /* নতুন মিস্টারি বক্স বাটন */
+        .lifeline-btn.ll-skip { background: #2196F3; color: white; }
+        .lifeline-btn.ll-skip.active { background: #0d47a1; }
+        .lifeline-btn.ll-hint { background: #9C27B0; color: white; }
+        .lifeline-btn.ll-hint.active { background: #4a148c; }
+
+        .buffs-panel {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .buff-badge {
+            display: none;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: bold;
+            animation: popIn 0.3s ease-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .buff-5050 { background: #e1f5fe; color: #0288d1; border: 1px solid #0288d1; }
+        .buff-guard { background: #f3e5f5; color: #6a1b9a; border: 1px solid #6a1b9a; animation: pulseGuard 0.8s infinite alternate; }
+        .buff-double { background: #ffeb3b; color: #333; border: 1px solid #f57f17; }
+        .buff-skip { background: #2196F3; color: white; border: 1px solid #0d47a1; }
+        .buff-hint { background: #9C27B0; color: white; border: 1px solid #4a148c; }
+
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulseGuard {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .step-badge { background: #e8f5e9; color: var(--primary); }
+        .timer-badge { background: #fff0f0; color: var(--danger); transition: 0.3s; }
+        .timer-badge.pulse { animation: pulse 0.5s infinite alternate; }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #2c3e50;
+            margin-bottom: 14px;
+            text-align: left;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .option-btn {
+            padding: 11px 14px;
+            background: white;
+            border: 2px solid #ececec;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--secondary);
+            background: #f8fafd;
+        }
+
+        .option-btn.hidden-option {
+            opacity: 0.2;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+
+        .correct {
+            background: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+        }
+
+        .wrong {
+            background: var(--danger) !important;
+            color: white !important;
+            border-color: var(--danger) !important;
+            animation: shake 0.4s;
+        }
+
+        .disabled { pointer-events: none; }
+
+        .poll-percentage {
+            font-size: 11px;
+            font-weight: bold;
+            color: #7f8c8d;
+            display: none;
+        }
+
+        .correct .poll-percentage,
+        .wrong .poll-percentage { color: white; }
+
+        .progress-bar {
+            height: 5px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        #progressFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--success), #27ae60);
+            transition: 0.4s;
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease-in; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        body.dark-mode {
+            background: linear-gradient(-45deg, #0a2e0f, #101d33, #15294a, #050a0c);
+        }
+
+        .dark-mode .quiz-container {
+            background: rgba(30, 30, 30, 0.96);
+            color: #e0e0e0;
+            border-color: #333;
+        }
+
+        .dark-mode .question-text { color: #ffffff; }
+        .dark-mode .option-btn { background: #2d2d2d; border-color: #444; color: #eee; }
+        .dark-mode .name-input { background: #333; color: #fff; border-color: #555; }
+        .dark-mode .entry-section { background: #2d2d2d; border-color: #555; }
+        .dark-mode .prize-card { background: #2d2d2d; color: #ddd; }
+        .dark-mode .lifeline-btn { background: #3d3d3d; color: #aaa; }
+        .dark-mode .lifeline-btn.ll-5050 { background: #1a3a4a; color: #4fc3f7; }
+        .dark-mode .lifeline-btn.ll-time { background: #4a2a1a; color: #ffa726; }
+        .dark-mode .lifeline-btn.ll-answer { background: #1a3a1a; color: #66bb6a; }
+        .dark-mode .lifeline-btn.ll-poll { background: #4a1a1a; color: #ef5350; }
+        .dark-mode .lifeline-btn.ll-guard { background: #2a1a3a; color: #ab47bc; }
+        .dark-mode .lifeline-btn.ll-skip { background: #1a3a5a; color: #64b5f6; }
+        .dark-mode .lifeline-btn.ll-hint { background: #3a1a4a; color: #ce93d8; }
+        .dark-mode .lifeline-btn.ll-5050.active { background: #0288d1; color: white; }
+        .dark-mode .lifeline-btn.ll-time.active { background: #e65100; color: white; }
+        .dark-mode .lifeline-btn.ll-answer.active { background: #2e7d32; color: white; }
+        .dark-mode .lifeline-btn.ll-poll.active { background: #c62828; color: white; }
+        .dark-mode .lifeline-btn.ll-guard.active { background: #6a1b9a; color: white; }
+        .dark-mode .lifeline-btn.ll-skip.active { background: #0d47a1; color: white; }
+        .dark-mode .lifeline-btn.ll-hint.active { background: #4a148c; color: white; }
+
+        .menu-container {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            z-index: 10;
+        }
+
+        .three-dot-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            padding: 4px 8px;
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 170px;
+            padding: 8px;
+            border: 1px solid #eee;
+            text-align: left;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .menu-dropdown.show { display: block; }
+        .dark-mode .menu-dropdown { background: #252525; border-color: #444; color: #fff; }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #444;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .dark-mode .menu-item { color: #ddd; border-color: #444; }
+
+        .theme-toggle-btn,
+        .audio-toggle-btn {
+            background: #eee;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .admin-panel {
+            background: #f8f9fa;
+            border-radius: 14px;
+            padding: 14px;
+            margin-top: 10px;
+            display: none;
+            text-align: left;
+        }
+
+        .admin-panel h4 { color: var(--primary); margin-bottom: 6px; font-size: 14px; }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin: 6px 0;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 6px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-box .number { font-size: 18px; font-weight: bold; color: var(--primary); }
+        .stat-box .label { font-size: 9px; color: #666; }
+
+        .admin-action-btn {
+            width: 100%;
+            padding: 7px;
+            margin: 3px 0;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-start-competition { background: var(--success); color: white; }
+        .btn-end-competition { background: var(--danger); color: white; }
+        .btn-declare-winners { background: var(--gold); color: #333; }
+        .btn-generate-code { background: #9b59b6; color: white; }
+
+        .admin-leaderboard {
+            margin-top: 10px;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .admin-leaderboard h5 {
+            color: var(--secondary);
+            font-size: 13px;
+            margin-bottom: 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .admin-lb-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-bottom: 2px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .admin-lb-item .rank { font-weight: bold; color: #888; width: 20px; font-size: 11px; }
+        .admin-lb-item .name { flex: 1; font-weight: 500; margin: 0 4px; font-size: 12px; }
+        .admin-lb-item .score { font-weight: bold; color: var(--primary); background: #e8f5e9; padding: 1px 8px; border-radius: 12px; font-size: 11px; }
+
+        .admin-lb-item.top1 { background: linear-gradient(135deg, #ffe259, #ffa751); color: #333; }
+        .admin-lb-item.top1 .score { background: #fff; }
+        .admin-lb-item.top2 { background: linear-gradient(135deg, #e0e0e0, #bdbdbd); color: #333; }
+        .admin-lb-item.top2 .score { background: #fff; }
+        .admin-lb-item.top3 { background: linear-gradient(135deg, #ffcc80, #ffa726); color: #333; }
+        .admin-lb-item.top3 .score { background: #fff; }
+
+        .admin-lb-empty {
+            text-align: center;
+            color: #999;
+            padding: 15px 0;
+            font-size: 12px;
+        }
+
+        .result-score {
+            background: #f0f7f1;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 14px 0;
+        }
+
+        .result-score h1 {
+            color: var(--success);
+            font-size: 36px;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .winner-announce {
+            background: linear-gradient(135deg, #ffe259, #ffa751);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 10px 0 15px 0;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
+        }
+
+        .winner-announce .date {
+            font-size: 16px;
+            color: #1a4a2a;
+            margin-top: 2px;
+        }
+
+        .winner-announce .label {
+            font-size: 11px;
+            color: #555;
+            font-weight: normal;
+        }
+
+        .dark-mode .winner-announce {
+            background: linear-gradient(135deg, #2d2d2d, #3d3d3d);
+            color: #f1c40f;
+            border: 1px solid #f1c40f;
+        }
+
+        .dark-mode .winner-announce .date { color: #f1c40f; }
+        .dark-mode .winner-announce .label { color: #aaa; }
+
+        .mystery-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .mystery-box-card {
+            background: linear-gradient(135deg, #ffe259, #ffa751);
+            padding: 35px 25px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 380px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #333;
+        }
+
+        .mystery-gift-icon {
+            font-size: 70px;
+            cursor: pointer;
+            animation: bounce 1s infinite alternate;
+            transition: 0.3s;
+        }
+
+        .mystery-gift-icon:hover { transform: scale(1.1); }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        .dark-mode .mystery-box-card {
+            background: linear-gradient(135deg, #2d2d2d, #3d3d3d);
+            color: #fff;
+            border: 1px solid #f1c40f;
+        }
+
+        @media (max-width: 480px) {
+            .prize-section { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+            .prize-card .trophy { font-size: 18px; }
+            .prize-card .amount { font-size: 12px; }
+            .quiz-container { padding: 15px 12px; }
+            .logo { width: 60px; height: 60px; }
+            .winner-announce { font-size: 12px; padding: 10px 12px; }
+            .winner-announce .date { font-size: 14px; }
+            .lifeline-btn { font-size: 10px; padding: 3px 8px; }
+            .mystery-box-card { padding: 25px 15px; }
+            .mystery-gift-icon { font-size: 50px; }
+        }
+
+        .admin-leaderboard::-webkit-scrollbar { width: 3px; }
+        .admin-leaderboard::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); border-radius: 10px; }
+        .admin-leaderboard::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .dark-mode .admin-leaderboard { background: #2d2d2d; color: #ddd; }
+        .dark-mode .admin-leaderboard h5 { border-color: #444; }
+        .dark-mode .admin-lb-item { background: rgba(255, 255, 255, 0.03); color: #ddd; }
+        .dark-mode .admin-lb-item .score { background: #1a3a1a; color: #2ecc71; }
+        .dark-mode .admin-lb-item.top1 .score { background: #333; color: #f1c40f; }
+        .dark-mode .admin-lb-item.top2 .score { background: #333; color: #bdbdbd; }
+        .dark-mode .admin-lb-item.top3 .score { background: #333; color: #ffa726; }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="quiz-container">
+            <!-- Menu -->
+            <div class="menu-container">
+                <button class="three-dot-btn" onclick="toggleMenu(event)">⋮</button>
+                <div class="menu-dropdown" id="menuDropdown">
+                    <div class="menu-item">
+                        <span>সাউন্ড:</span>
+                        <button class="audio-toggle-btn" onclick="toggleAudio(event)" id="audioBtn">🔊</button>
+                    </div>
+                    <div class="menu-item">
+                        <span>থিম:</span>
+                        <button class="theme-toggle-btn" onclick="toggleTheme(event)" id="themeBtn">🌙</button>
+                    </div>
+                    <div class="menu-item" style="border-bottom:none; justify-content:center; gap:6px;">
+                        <button onclick="location.reload()" style="background:#e74c3c; color:white; border:none; padding:2px 10px; border-radius:8px; font-size:11px; cursor:pointer;">⟳</button>
+                        <button onclick="showAdminPanel()" style="background:#3498db; color:white; border:none; padding:2px 10px; border-radius:8px; font-size:11px; cursor:pointer;">⚙️</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Screen -->
+            <div id="startScreen" class="fade-in">
+                <div class="logo-center">
+                    <img src="https://i.imgur.com/mXYuZAS.jpeg" class="logo" alt="গাউসিয়া কমিটি">
+                </div>
+
+                <h4 style="font-size:13px; text-align:center;">গাউসিয়া কমিটি বাংলাদেশ</h4>
+                <h2 style="color:var(--primary); margin:2px 0 6px 0; font-size:18px; text-align:center;">কুইজ কম্পিটিশন ২০২৬</h2>
+                <p style="font-weight:600; color:#666; margin-bottom:6px; font-size:11px; text-align:center;">ঘাষি মাঝির পাড়া ইউনিট</p>
+
+                <div class="prize-section">
+                    <div class="prize-card gold"><div class="trophy">🥇</div><div class="amount">৳৫,০০০</div><div class="label">১ম</div></div>
+                    <div class="prize-card silver"><div class="trophy">🥈</div><div class="amount">৳৩,০০০</div><div class="label">২য়</div></div>
+                    <div class="prize-card bronze"><div class="trophy">🥉</div><div class="amount">৳২,০০০</div><div class="label">৩য়</div></div>
+                </div>
+
+                <div class="entry-section" id="entrySection">
+                    <div class="entry-badge">🎫 এন্ট্রি কোড</div>
+                    <div class="entry-input-group">
+                        <input type="text" id="entryCode" class="entry-input" placeholder="কোড দিন" maxlength="10">
+                        <button class="btn-entry" onclick="verifyEntryCode()">🔓 ভেরিফাই</button>
+                    </div>
+                    <div id="entryStatus" class="status-message"></div>
+                </div>
+
+                <div style="margin-top:8px;">
+                    <div class="input-group">
+                        <input type="text" id="playerName" class="name-input" placeholder="আপনার নাম">
+                        <input type="tel" id="playerMobile" class="name-input" placeholder="মোবাইল (01XXXXXXXXX)">
+                    </div>
+                    <button class="btn-main" id="startBtn" onclick="registerAndStart()" disabled>🔒 এন্ট্রি কোড দিন</button>
+                </div>
+
+                <p style="margin-top:10px; font-size:11px; color:#999; text-align:center;">👥 <span id="participantCount">০</span> জন অংশ নিয়েছেন</p>
+                <p style="font-size:10px; color:#888; text-align:center;">ডেভেলপার: আসিফ হোসেন নুর</p>
+            </div>
+
+            <!-- Quiz Content -->
+            <div id="quizContent" style="display:none;">
+                <div class="stats-row">
+                    <div class="badge step-badge" id="stepDisplay">প্রশ্ন: ১</div>
+                    <div class="badge timer-badge" id="timerBadge">⏱ <span id="time">60</span>সে.</div>
+                </div>
+
+                <div class="lifelines-bar">
+                    <button class="lifeline-btn ll-5050" id="ll5050" onclick="use5050()">💡 ৫০:৫০</button>
+                    <button class="lifeline-btn ll-time" id="llTime" onclick="useTimeBonus()">⏱️ +৩০সে</button>
+                    <button class="lifeline-btn ll-answer" id="llAnswer" onclick="useShowAnswer()">🎯 সঠিক উত্তর</button>
+                    <button class="lifeline-btn ll-poll" id="llPoll" onclick="useAudiencePoll()">👥 পোল</button>
+                    <button class="lifeline-btn ll-guard" id="llGuard" onclick="useLifeGuard()">🛡️ লাইফ গার্ড</button>
+                    <button class="lifeline-btn ll-skip" id="llSkip" onclick="useSkipQuestion()">⏭️ স্কিপ</button>
+                    <button class="lifeline-btn ll-hint" id="llHint" onclick="useHint()">💡 হিন্ট</button>
+                </div>
+
+                <div class="buffs-panel">
+                    <div id="signal5050" class="buff-badge buff-5050">💡 ৫০:৫০ অ্যাক্টিভ</div>
+                    <div id="signalGuard" class="buff-badge buff-guard">🛡️ লাইফ গার্ড অন</div>
+                    <div id="signalDouble" class="buff-badge buff-double">🔥 ডাবল স্কোর!</div>
+                    <div id="signalSkip" class="buff-badge buff-skip">⏭️ স্কিপ রেডি!</div>
+                    <div id="signalHint" class="buff-badge buff-hint">💡 হিন্ট রেডি!</div>
+                </div>
+
+                <div class="progress-bar"><div id="progressFill"></div></div>
+                <h3 id="question" class="question-text"></h3>
+                <div id="options" class="options-grid"></div>
+                <button id="nextBtn" class="btn-main" style="display:none; margin-top:10px;" onclick="handleNext()">পরবর্তী ➜</button>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="resultScreen" style="display:none;" class="fade-in">
+                <div class="logo-center">
+                    <img src="https://i.imgur.com/mXYuZAS.jpeg" class="logo" alt="গাউসিয়া কমিটি">
+                </div>
+
+                <h2 style="color:var(--primary); font-size:20px; text-align:center;">আলহামদুলিল্লাহ!</h2>
+                <div style="font-size:44px; margin:6px 0; text-align:center;">🏆</div>
+                <p style="font-size:13px; text-align:center;">ধন্যবাদ, <b id="displayPlayerName" style="color:var(--secondary);"></b>!</p>
+
+                <div class="result-score">
+                    <p style="font-size:12px; color:#666; text-align:center;">আপনার স্কোর</p>
+                    <h1><span id="finalScore"></span> / ৫০</h1>
+                    <p style="font-size:12px; color:#666; text-align:center; margin-top:5px;" id="scoreBreakdown"></p>
+                </div>
+
+                <div class="winner-announce">
+                    <div class="label">🏅 বিজয়ী ঘোষণা</div>
+                    <div class="date" id="winnerDate">
+                        📅 শনিবার, ২০ জুন ২০২৬ | সন্ধ্যা ৭:০০ টা
+                    </div>
+                    <div style="font-size:11px; color:#666; margin-top:2px; font-weight:normal;">
+                        ⏳ ফলাফল ও পুরস্কার বিতরণ অনুষ্ঠানে যোগ দিন
+                    </div>
+                </div>
+
+                <p id="saveMsg" style="font-weight:bold; margin-bottom:12px; color:#f39c12; font-size:12px; text-align:center;"></p>
+
+                <button class="btn-main" style="background:#25D366; margin-bottom:6px; font-size:13px;" onclick="shareResult()">শেয়ার 📲</button>
+                <button class="btn-main" style="background:#7f8c8d; font-size:13px;" onclick="location.reload()">হোম 🔄</button>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="admin-panel">
+                <h4>⚙️ অ্যাডমিন প্যানেল</h4>
+
+                <div class="admin-stats">
+                    <div class="stat-box"><div class="number" id="adminTotal">০</div><div class="label">মোট অংশগ্রহণ</div></div>
+                    <div class="stat-box"><div class="number" id="adminActive">০</div><div class="label">স্কোর দিয়েছে</div></div>
+                    <div class="stat-box"><div class="number" id="adminAvg">০</div><div class="label">গড় স্কোর</div></div>
+                </div>
+
+                <div class="admin-leaderboard" id="adminLeaderboard">
+                    <h5>🏆 লাইভ লিডারবোর্ড (শুধু অ্যাডমিন)</h5>
+                    <div id="adminLbList">
+                        <div class="admin-lb-empty">⏳ এখনো কেউ অংশ নেয়নি...</div>
+                    </div>
+                </div>
+
+                <button class="admin-action-btn btn-generate-code" onclick="generateEntryCode()">🎫 নতুন এন্ট্রি কোড</button>
+                <button class="admin-action-btn btn-start-competition" onclick="startCompetition()">🚀 কম্পিটিশন স্টার্ট</button>
+                <button class="admin-action-btn btn-end-competition" onclick="endCompetition()">⏹️ কম্পিটিশন বন্ধ</button>
+                <button class="admin-action-btn btn-declare-winners" onclick="declareWinners()">🏅 বিজয়ী ঘোষণা</button>
+                <button class="admin-action-btn" style="background:#e74c3c; color:white;" onclick="resetAllData()">🗑️ সব ডেটা রিসেট</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj5CN0CHF7s229xjjmviIFvqc2KYUm8R__NM2pmGuAmfPcQJw03jccvL4VmM_wBPm1Fw/exec";
+        const ADMIN_PASSWORD = "2004";
+
+        // ===== STATE =====
+        let isEntryVerified = false;
+        let isCompetitionActive = false;
+        let currentStep = 1,
+            currentIdx = 0,
+            correctCount = 0,
+            wrongCount = 0,
+            totalTime = 60,
+            timer;
+        let playerName = "",
+            playerMobile = "",
+            entryCode = "";
+        let stepQuestions = [];
+        let quizActive = false;
+        let startTime = null;
+
+        // ===== LIFELINE STATE =====
+        let state5050 = false,
+            stateTime = false,
+            stateAnswer = false,
+            statePoll = false,
+            stateGuard = false;
+        let isGuardActiveNow = false;
+
+        // ===== MYSTERY BOX STATE =====
+        let streakCount = 0;
+        let doubleScoreActive = false;
+        let skipQuestionActive = false;
+        let hintActive = false;
+        let hintUsedForCurrentQ = false;
+
+        const mysteryRewards = [
+            "life_restore", 
+            "guard", 
+            "time_20", 
+            "time_30", 
+            "time_50", 
+            "time_60", 
+            "free_score", 
+            "double_score",
+            "skip_question",
+            "extra_time",
+            "hint",
+            "bonus"
+        ];
+
+        // ===== LOCAL STORAGE HELPERS =====
+        function getParticipants() {
+            return JSON.parse(localStorage.getItem('mp_participants') || '[]');
+        }
+
+        function setParticipants(data) {
+            localStorage.setItem('mp_participants', JSON.stringify(data));
+        }
+
+        function getScores() {
+            return JSON.parse(localStorage.getItem('mp_scores') || '{}');
+        }
+
+        function setScores(data) {
+            localStorage.setItem('mp_scores', JSON.stringify(data));
+        }
+
+        function getActiveCodes() {
+            return JSON.parse(localStorage.getItem('mp_activeCodes') || '[]');
+        }
+
+        function setActiveCodes(data) {
+            localStorage.setItem('mp_activeCodes', JSON.stringify(data));
+        }
+
+        function getCompetitionStatus() {
+            return localStorage.getItem('mp_competitionActive') === 'true';
+        }
+
+        function setCompetitionStatus(status) {
+            localStorage.setItem('mp_competitionActive', status ? 'true' : 'false');
+        }
+
+        // ===== GOOGLE SHEETS INTEGRATION =====
+        function sendToGoogleSheets(data) {
+            if (!SCRIPT_URL || SCRIPT_URL.includes('YOUR_SCRIPT_ID')) {
+                console.warn('⚠️ Google Sheets URL সেট করা হয়নি। ডেটা লোকালি সংরক্ষিত।');
+                return;
+            }
+
+            fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(() => console.log('✅ ডেটা Google Sheets-এ পাঠানো হয়েছে'))
+                .catch(error => console.error('❌ Google Sheets-এ পাঠাতে ব্যর্থ:', error));
+        }
+
+        // ===== ২৫০টি প্রশ্ন (সহজ ১০০, মধ্যম ৭৫, কঠিন ৭৫) =====
+        const easyQuestions = [
+            { q: "ঈমান শব্দের অর্থ কী?", a: "বিশ্বাস", b: "অবিশ্বাস", c: "সন্দেহ", d: "ভয়", ans: "a" },
+            { q: "ইসলামের মৌলিক স্তম্ভ কয়টি?", a: "৩", b: "৪", c: "৫", d: "৬", ans: "c" },
+            { q: "ফজরের নামাজ কয় রাকাত?", a: "২", b: "৩", c: "৪", d: "১", ans: "a" },
+            { q: "নবীজির পিতার নাম কী?", a: "আব্দুল্লাহ", b: "আবু তালিব", c: "হামজা", d: "আব্বাস", ans: "a" },
+            { q: "কুরআনের প্রথম সূরা কোনটি?", a: "ফাতিহা", b: "বাকারা", c: "ইখলাস", d: "নাস", ans: "a" },
+            { q: "জান্নাতে কি প্রবাহিত হয়?", a: "নদী", b: "আগুন", c: "ধোঁয়া", d: "পাথর", ans: "a" },
+            { q: "ফেরেশতা কী দিয়ে তৈরি?", a: "আলো", b: "মাটি", c: "আগুন", d: "পানি", ans: "a" },
+            { q: "কুরআনে কয়টি সূরা আছে?", a: "১১৪", b: "১১০", c: "১২০", d: "১১৬", ans: "a" },
+            { q: "সবচেয়ে বড় সূরা কোনটি?", a: "বাকারা", b: "ইখলাস", c: "ফাতিহা", d: "নাস", ans: "a" },
+            { q: "নবীজি কোথায় জন্মগ্রহণ করেন?", a: "মক্কা", b: "মদিনা", c: "তায়েফ", d: "বাগদাদ", ans: "a" },
+            { q: "আসমানী কিতাব কয়টি?", a: "১০৪", b: "৪", c: "১০০", d: "১০", ans: "a" },
+            { q: "প্রথম খলিফা কে?", a: "আবু বকর", b: "উমর", c: "উসমান", d: "আলী", ans: "a" },
+            { q: "যাকাত কত বছর পর দিতে হয়?", a: "১", b: "৬ মাস", c: "২", d: "৫", ans: "a" },
+            { q: "জান্নাতের দরজা কয়টি?", a: "৮", b: "৪", c: "৭", d: "১০", ans: "a" },
+            { q: "হজ ইসলামের কততম রুকন?", a: "৫ম", b: "৩য়", c: "৪র্থ", d: "২য়", ans: "a" },
+            { q: "বদর যুদ্ধ কত হিজরিতে?", a: "২য়", b: "১ম", c: "৩য়", d: "৪র্থ", ans: "a" },
+            { q: "দ্বিতীয় খলিফা কে?", a: "উমর", b: "আলী", c: "উসমান", d: "বিলাল", ans: "a" },
+            { q: "আল্লাহর ঘর叫什么?", a: "কাবা", b: "মসজিদে নববী", c: "আকসা", d: "বায়তুল মামুর", ans: "a" },
+            { q: "নামাজের চাবি কী?", a: "পবিত্রতা", b: "হজ", c: "যাকাত", d: "সালাম", ans: "a" },
+            { q: "মেরাজ কোন মাসে?", a: "রজব", b: "রমজান", c: "শাওয়াল", d: "মুহাররম", ans: "a" },
+            { q: "তওরাত কার ওপর নাযিল?", a: "মুসা", b: "ঈসা", c: "দাউদ", d: "মুহাম্মদ", ans: "a" },
+            { q: "ফেরাউন কোন নবীর শত্রু?", a: "মুসা", b: "নুহ", c: "ঈসা", d: "ইব্রাহিম", ans: "a" },
+            { q: "বৃষ্টির দায়িত্ব কোন ফেরেশতার?", a: "মিকাইল", b: "জিবরাইল", c: "আজরাইল", d: "ইসরাফিল", ans: "a" },
+            { q: "উম্মুল কুরআন কোন সূরা?", a: "ফাতিহা", b: "ইখলাস", c: "ইয়াসিন", d: "বাকারা", ans: "a" },
+            { q: "প্রথম আযান কে দেন?", a: "বিলাল", b: "আবু বকর", c: "আলী", d: "উমর", ans: "a" },
+            { q: "কুরআন কোন রাতে নাযিল হয়?", a: "লাইলাতুল কদর", b: "শবে বরাত", c: "মেরাজ", d: "আরাফাত", ans: "a" },
+            { q: "হজের প্রধান কাজ কী?", a: "আরাফাতে অবস্থান", b: "সাফা-মারওয়া", c: "মিনায় থাকা", d: "পাথর মারা", ans: "a" },
+            { q: "হিজরি সাল শুরু করেন কে?", a: "উমর", b: "আবু বকর", c: "উসমান", d: "আলী", ans: "a" },
+            { q: "সাইয়্যিদুল মুরসালিন কে?", a: "মুহাম্মদ", b: "আদম", c: "ইব্রাহিম", d: "নুহ", ans: "a" },
+            { q: "কিয়ামতে হিসাব নেবেন কে?", a: "আল্লাহ", b: "নবীগণ", c: "ফেরেশতারা", d: "ওলীগণ", ans: "a" },
+            { q: "সবচেয়ে ছোট সূরা কোনটি?", a: "কাউসার", b: "ইখলাস", c: "নাস", d: "ফালাক", ans: "a" },
+            { q: "বদর যুদ্ধে শহীদ কতজন?", a: "১৪", b: "১২", c: "৮", d: "১৬", ans: "a" },
+            { q: "আমলনামা লেখেন কে?", a: "কিরামান কাতিবিন", b: "মুনকার নাকির", c: "জিবরাইল", d: "মিকাইল", ans: "a" },
+            { q: "ইসলামের প্রথম যুদ্ধ?", a: "বদর", b: "ওহুদ", c: "খন্দক", d: "খায়বার", ans: "a" },
+            { q: "নবীজি কোথায় হিজরত করেন?", a: "ইয়াসরিব", b: "কুফা", c: "বাগদাদ", d: "দামেস্ক", ans: "a" },
+            { q: "হাশরে কার সুপারিশ?", a: "মুহাম্মদ", b: "পিতা-মাতা", c: "ফেরেশতা", d: "সাহাবীগণ", ans: "a" },
+            { q: "মক্কা বিজয় কত হিজরিতে?", a: "৮", b: "৬", c: "১০", d: "৫", ans: "a" },
+            { q: "প্রথম মহিলা শহীদ কে?", a: "সুমাইয়া", b: "খাদিজা", c: "আয়েশা", d: "ফাতিমা", ans: "a" },
+            { q: "হাদীসের বর্ণনাকারী পরম্পরা?", a: "সনদ", b: "মতন", c: "রাবী", d: "সূচী", ans: "a" },
+            { q: "যাকাতের নিসাব কী?", a: "৭.৫ তোলা স্বর্ণ", b: "৫ তোলা", c: "১০ তোলা", d: "৩ তোলা", ans: "a" },
+            { q: "পবিত্র কুরআনে মোট কয়টি পারা?", a: "৩০", b: "২৮", c: "৩২", d: "২৫", ans: "a" },
+            { q: "সূরা ইখলাস কয়টি আয়াত?", a: "৪", b: "৫", c: "৩", d: "৬", ans: "a" },
+            { q: "নবীজির মাতার নাম কী?", a: "আমিনা", b: "হালিমা", c: "খাদিজা", d: "ফাতিমা", ans: "a" },
+            { q: "ওহুদ যুদ্ধ কত হিজরিতে?", a: "৩", b: "২", c: "৪", d: "৫", ans: "a" },
+            { q: "খন্দক যুদ্ধ অন্যভাবে কী নামে পরিচিত?", a: "আহযাব", b: "বদর", c: "হুনাইন", d: "তাবুক", ans: "a" },
+            { q: "হযরত ইউসুফ (আ.)-এর উপাধি কী?", a: "আহসানুল কাসাস", b: "খলিলুল্লাহ", c: "কালিমুল্লাহ", d: "রুহুল্লাহ", ans: "a" },
+            { q: "মহররম মাসের গুরুত্বপূর্ণ দিন কোনটি?", a: "আশুরা", b: "শবে বরাত", c: "লাইলাতুল কদর", d: "ঈদ", ans: "a" },
+            { q: "হযরত দাউদ (আ.)-এর কিতাবের নাম কী?", a: "যাবুর", b: "তওরাত", c: "ইঞ্জিল", d: "কুরআন", ans: "a" },
+            { q: "ইসলামের প্রথম শহীদ কে?", a: "হযরত ইয়াসির", b: "হযরত সুমাইয়া", c: "হযরত বিলাল", d: "হযরত আবু বকর", ans: "a" },
+            { q: "কুরআনের আয়াত সংখ্যা কত?", a: "৬৬৬৬", b: "৬২৩৬", c: "৬০০০", d: "৬৫০০", ans: "a" },
+            { q: "পবিত্র মক্কার গুরুত্বপূর্ণ পাহাড় কোনটি?", a: "সাফা-মারওয়া", b: "উহুদ", c: "সিনাই", d: "জাবালুন নূর", ans: "a" },
+            { q: "হযরত মুহাম্মদ (দ.)-এর জনক কে?", a: "আব্দুল্লাহ", b: "আবু তালিব", c: "আব্দুল মুত্তালিব", d: "হামজা", ans: "a" },
+            { q: "নামাজের কয়টি রাকাত সুন্নত?", a: "১২", b: "১০", c: "১৪", d: "৮", ans: "a" },
+            { q: "যাকাত কাদের দেওয়া যায় না?", a: "ধনী ব্যক্তিকে", b: "গরিবকে", c: "মিসকিনকে", d: "ঋণগ্রস্তকে", ans: "a" },
+            { q: "হজের সময় কয়টি পাথর মারা হয়?", a: "৭০", b: "৪৯", c: "৩৫", d: "৫৬", ans: "a" },
+            { q: "রোজার ফরজ কয়টি?", a: "৩", b: "৪", c: "৫", d: "২", ans: "a" },
+            { q: "কুরআনের বৃহত্তম সূরা?", a: "সূরা বাকারা", b: "সূরা ইমরান", c: "সূরা নিসা", d: "সূরা মায়িদা", ans: "a" },
+            { q: "ছোট সূরা কাউসারের আয়াত সংখ্যা?", a: "৩", b: "৪", c: "৫", d: "৬", ans: "a" },
+            { q: "নবীজি কত বছর বয়সে নবুয়ত পান?", a: "৪০", b: "৩৫", c: "৪৫", d: "৫০", ans: "a" },
+            { q: "হিজরত কত সালে ঘটে?", a: "৬২২ খ্রি.", b: "৬১০ খ্রি.", c: "৬৩০ খ্রি.", d: "৬০০ খ্রি.", ans: "a" },
+            { q: "মসজিদে নববী কোথায় অবস্থিত?", a: "মদিনা", b: "মক্কা", c: "কুফা", d: "বাগদাদ", ans: "a" },
+            { q: "কুরআনের হৃদপিণ্ড কোন সূরা?", a: "সূরা ইয়াসিন", b: "সূরা রহমান", c: "সূরা ফাতিহা", d: "সূরা বাকারা", ans: "a" },
+            { q: "আরকানুল ইসলাম কী?", a: "ইসলামের স্তম্ভ", b: "ঈমানের স্তম্ভ", c: "নামাজের স্তম্ভ", d: "হজের স্তম্ভ", ans: "a" },
+            { q: "হযরত আবু বকর (রা.) কত বছর খিলাফত করেন?", a: "২ বছর", b: "৪ বছর", c: "৫ বছর", d: "৩ বছর", ans: "a" },
+            { q: "হযরত উমর (রা.) কত বছর খিলাফত করেন?", a: "১০ বছর", b: "১২ বছর", c: "৮ বছর", d: "১৫ বছর", ans: "a" },
+            { q: "হযরত উসমান (রা.) কত বছর খিলাফত করেন?", a: "১২ বছর", b: "১০ বছর", c: "১৫ বছর", d: "৮ বছর", ans: "a" },
+            { q: "হযরত আলী (রা.) কত বছর খিলাফত করেন?", a: "৫ বছর", b: "৪ বছর", c: "৬ বছর", d: "৩ বছর", ans: "a" },
+            { q: "আল্লাহর ৯৯ নামের মধ্যে কোনটি সর্বশ্রেষ্ঠ?", a: "আল্লাহ", b: "রহমান", c: "রহিম", d: "মালিক", ans: "a" },
+            { q: "আসমাউল হুসনা কাকে বলে?", a: "আল্লাহর সুন্দর নাম", b: "নবীজির নাম", c: "ফেরেশতার নাম", d: "সাহাবীগণের নাম", ans: "a" },
+            { q: "সালাতুল ইস্তিখারা কী?", a: "ভালো সিদ্ধান্তের নামাজ", b: "শুকরিয়া নামাজ", c: "তওবা নামাজ", d: "হাজতের নামাজ", ans: "a" },
+            { q: "ওযু কয়টি ফরজ?", a: "৪", b: "৩", c: "৫", d: "৬", ans: "a" },
+            { q: "গোসল কয়টি ফরজ?", a: "৩", b: "৪", c: "২", d: "৫", ans: "a" },
+            { q: "তায়াম্মুম কয়টি ফরজ?", a: "২", b: "৩", c: "৪", d: "৫", ans: "a" },
+            { q: "আযানের কয়টি অংশ?", a: "১৫", b: "১৬", c: "১৭", d: "১৪", ans: "a" },
+            { q: "ইকামতের কয়টি অংশ?", a: "১১", b: "১২", c: "১৩", d: "১০", ans: "a" },
+            { q: "সিজদায় কয়বার তাকবীর দিতে হয়?", a: "১", b: "২", c: "৩", d: "৪", ans: "a" },
+            { q: "রুকুতে কয়বার তাকবীর দিতে হয়?", a: "১", b: "২", c: "৩", d: "৪", ans: "a" },
+            { q: "কিয়ামতে সবাই কোথায় জমায়েত হবে?", a: "ময়দানে মাহশর", b: "জান্নাত", c: "জাহান্নাম", d: "আরাফাত", ans: "a" },
+            { q: "পুলসিরাত কী?", a: "জান্নাতের সেতু", b: "জাহান্নামের সেতু", c: "নদী", d: "পাহাড়", ans: "a" }
+        ];
+
+        const mediumQuestions = [
+            { q: "মুনকার-নাকির কারা?", a: "প্রশ্নকারী ফেরেশতা", b: "আজরাইল", c: "জিবরাইল", d: "মিকাইল", ans: "a" },
+            { q: "কবরের আযাব কোন ধরনের?", a: "আত্মিক", b: "শারীরিক", c: "উভয়", d: "নেই", ans: "a" },
+            { q: "শাফায়াত কী?", a: "সুপারিশ", b: "শাস্তি", c: "পুরস্কার", d: "হিসাব", ans: "a" },
+            { q: "আল্লাহর আরশ কোথায়?", a: "৭ম আসমানে", b: "৬ষ্ঠ আসমানে", c: "৫ম আসমানে", d: "৪র্থ আসমানে", ans: "a" },
+            { q: "কুরসি কী?", a: "আল্লাহর সিংহাসন", b: "ফেরেশতার স্থান", c: "জান্নাত", d: "জাহান্নাম", ans: "a" },
+            { q: "লাওহে মাহফুজ কী?", a: "সংরক্ষিত ফলক", b: "নামাজের স্থান", c: "হজের স্থান", d: "যাকাতের স্থান", ans: "a" },
+            { q: "কালামুল্লাহ কী?", a: "আল্লাহর বাণী", b: "নবীজির কথা", c: "ফেরেশতার কথা", d: "সাহাবীদের কথা", ans: "a" },
+            { q: "ইসলামের শেষ নবী কে?", a: "মুহাম্মদ", b: "ঈসা", c: "ইব্রাহিম", d: "মুসা", ans: "a" },
+            { q: "আম্বিয়াদের মধ্যে কে প্রথম?", a: "আদম", b: "ইদরিস", c: "নুহ", d: "ইব্রাহিম", ans: "a" },
+            { q: "উলুল আজম কয়জন?", a: "৫", b: "৪", c: "৬", d: "৩", ans: "a" },
+            { q: "খাতামুন নাবিয়্যিন কাকে বলে?", a: "মুহাম্মদ", b: "ঈসা", c: "ইব্রাহিম", d: "মুসা", ans: "a" },
+            { q: "কুরআন কোন ভাষায় নাযিল হয়েছে?", a: "আরবি", b: "ইংরেজি", c: "উর্দু", d: "ফার্সি", ans: "a" },
+            { q: "আল্লাহর কোন নাম অর্থ 'দয়ালু'?", a: "রহমান", b: "মালিক", c: "কুদ্দুস", d: "আজিজ", ans: "a" },
+            { q: "আল্লাহর কোন নাম অর্থ 'ক্ষমাশীল'?", a: "গফুর", b: "রহিম", c: "ওয়াদুদ", d: "মজিদ", ans: "a" },
+            { q: "হযরত জিবরাইল (আ.)-এর অন্য নাম কী?", a: "রুহুল আমিন", b: "রুহুল কুদ্দুস", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "ইসলামে কয়টি আসমান?", a: "৭", b: "৫", c: "৩", d: "৯", ans: "a" },
+            { q: "কুরআনের সিজদার আয়াত কয়টি?", a: "১৪", b: "১৫", c: "১৬", d: "১৩", ans: "a" },
+            { q: "সূরা রহমানে কয়টি আয়াত?", a: "৭৮", b: "৭৫", c: "৮০", d: "৮২", ans: "a" },
+            { q: "সূরা ইয়াসিনকে কী বলা হয়?", a: "কুরআনের হৃদয়", b: "কুরআনের মুখ", c: "কুরআনের চোখ", d: "কুরআনের কান", ans: "a" },
+            { q: "সূরা ফাতিহার আরেক নাম কী?", a: "উম্মুল কিতাব", b: "উম্মুল কুরআন", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "সূরা ইখলাস কিসের সমান?", a: "কুরআনের এক-তৃতীয়াংশ", b: "কুরআনের অর্ধেক", c: "কুরআনের চার-পঞ্চমাংশ", d: "কুরআনের দুই-তৃতীয়াংশ", ans: "a" },
+            { q: "ইসলামের পঞ্চম স্তম্ভ কী?", a: "হজ", b: "যাকাত", c: "সাওম", d: "সালাত", ans: "a" },
+            { q: "ইসলামের দ্বিতীয় স্তম্ভ কী?", a: "সালাত", b: "শাহাদাহ", c: "যাকাত", d: "সাওম", ans: "a" },
+            { q: "ইসলামের প্রথম স্তম্ভ কী?", a: "শাহাদাহ", b: "সালাত", c: "যাকাত", d: "সাওম", ans: "a" },
+            { q: "ইসলামের চতুর্থ স্তম্ভ কী?", a: "সাওম", b: "হজ", c: "যাকাত", d: "সালাত", ans: "a" },
+            { q: "ইসলামের তৃতীয় স্তম্ভ কী?", a: "যাকাত", b: "সালাত", c: "সাওম", d: "হজ", ans: "a" },
+            { q: "শাহাদাহ কীভাবে উচ্চারণ করতে হয়?", a: "লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ", b: "আল্লাহু আকবার", c: "সুবহানাল্লাহ", d: "আলহামদুলিল্লাহ", ans: "a" },
+            { q: "ইসলামের মৌলিক বিশ্বাস কয়টি?", a: "৬", b: "৫", c: "৭", d: "৪", ans: "a" },
+            { q: "আল্লাহর প্রতি ঈমানের অর্থ কী?", a: "আল্লাহর অস্তিত্বে বিশ্বাস", b: "আল্লাহর ফেরেশতায় বিশ্বাস", c: "আল্লাহর কিতাবে বিশ্বাস", d: "আল্লাহর রাসূলে বিশ্বাস", ans: "a" },
+            { q: "ফেরেশতায় ঈমানের অর্থ কী?", a: "ফেরেশতার অস্তিত্বে বিশ্বাস", b: "ফেরেশতার গুণে বিশ্বাস", c: "ফেরেশতার কাজে বিশ্বাস", d: "উভয়", ans: "a" },
+            { q: "আসমানী কিতাবে ঈমানের অর্থ কী?", a: "আল্লাহর কিতাবে বিশ্বাস", b: "কিতাবের বিধানে বিশ্বাস", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "রাসূলে ঈমানের অর্থ কী?", a: "আল্লাহর রাসূলে বিশ্বাস", b: "রাসূলের গুণে বিশ্বাস", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "আখিরাতে ঈমানের অর্থ কী?", a: "পরকালে বিশ্বাস", b: "মৃত্যুর পর জীবন", c: "হাশর-নশরে বিশ্বাস", d: "উভয়", ans: "a" },
+            { q: "তাকদিরে ঈমানের অর্থ কী?", a: "ভাগ্যে বিশ্বাস", b: "আল্লাহর ইচ্ছায় বিশ্বাস", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "ইসলামের কোন বিধানটি সবচেয়ে গুরুত্বপূর্ণ?", a: "তাওহিদ", b: "নামাজ", c: "যাকাত", d: "হজ", ans: "a" },
+            { q: "শিরক কী?", a: "আল্লাহর সাথে কাউকে শরিক করা", b: "আল্লাহকে অস্বীকার করা", c: "নামাজ না পড়া", d: "যাকাত না দেওয়া", ans: "a" },
+            { q: "আল্লাহর কোন গুণটি সবচেয়ে গুরুত্বপূর্ণ?", a: "তাওহিদ", b: "রহমান", c: "রহিম", d: "মালিক", ans: "a" },
+            { q: "আল্লাহর কয়টি নামে প্রতিদান পাওয়া যায়?", a: "৯৯", b: "১০০", c: "৯৮", d: "১০১", ans: "a" },
+            { q: "আল্লাহর সবচেয়ে বড় নাম কোনটি?", a: "আল্লাহ", b: "রহমান", c: "রহিম", d: "মালিক", ans: "a" },
+            { q: "কোন সূরায় 'বিসমিল্লাহ' ছাড়া শুরু হয়?", a: "সূরা তওবা", b: "সূরা ফাতিহা", c: "সূরা বাকারা", d: "সূরা ইমরান", ans: "a" },
+            { q: "কুরআনের প্রথম আয়াত কোন সূরায়?", a: "সূরা আলাক", b: "সূরা ফাতিহা", c: "সূরা বাকারা", d: "সূরা ইমরান", ans: "a" },
+            { q: "আল্লাহর সিংহাসনের নাম কী?", a: "আরশ", b: "কুরসি", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর পায়ার নাম কী?", a: "কুরসি", b: "আরশ", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর সবচেয়ে প্রিয় কাজ কী?", a: "নামাজ", b: "যাকাত", c: "হজ", d: "তওবা", ans: "a" },
+            { q: "ইসলামে সবচেয়ে গুনাহ কোনটি?", a: "শিরক", b: "মিথ্যা বলা", c: "চুরি", d: "হত্যা", ans: "a" },
+            { q: "কোন কাজে আল্লাহ সবচেয়ে খুশি হন?", a: "তওবা", b: "নামাজ", c: "যাকাত", d: "হজ", ans: "a" },
+            { q: "কোন কাজে আল্লাহ সবচেয়ে নাখোশ হন?", a: "শিরক", b: "মিথ্যা", c: "চুরি", d: "হত্যা", ans: "a" },
+            { q: "সাবর কী?", a: "ধৈর্য", b: "শুকর", c: "তওবা", d: "ইস্তিগফার", ans: "a" },
+            { q: "শুকর কী?", a: "কৃতজ্ঞতা", b: "ধৈর্য", c: "তওবা", d: "ইস্তিগফার", ans: "a" },
+            { q: "তওবা কী?", a: "পাপ থেকে ফিরে আসা", b: "পাপ করা", c: "পাপকে ভালো বলা", d: "পাপ গোপন করা", ans: "a" },
+            { q: "ইস্তিগফার কী?", a: "ক্ষমা চাওয়া", b: "পাপ করা", c: "পাপ গোপন করা", d: "পাপকে ভালো বলা", ans: "a" },
+            { q: "কিয়ামতের আগে কী হবে?", a: "দাজ্জালের আবির্ভাব", b: "ঈসা (আ.)-এর আগমন", c: "ইয়াজুজ-মাজুজ", d: "উভয়", ans: "a" },
+            { q: "দাজ্জাল কে?", a: "একজন প্রতারক", b: "ফেরেশতা", c: "নবী", d: "সাহাবী", ans: "a" },
+            { q: "ঈসা (আ.) কখন আসবেন?", a: "কিয়ামতের আগে", b: "কিয়ামতের পরে", c: "কিয়ামতের দিন", d: "কখনো আসবেন না", ans: "a" },
+            { q: "ইয়াজুজ-মাজুজ কারা?", a: "একটি জাতি", b: "ফেরেশতা", c: "নবীগণ", d: "সাহাবীগণ", ans: "a" },
+            { q: "কিয়ামতের আলামত কয়টি?", a: "১০টি ছোট, ১০টি বড়", b: "৫টি ছোট, ৫টি বড়", c: "১৫টি ছোট, ১৫টি বড়", d: "২০টি ছোট, ২০টি বড়", ans: "a" },
+            { q: "জান্নাতের উঁচু স্তরকে কী বলে?", a: "ফেরদাউস", b: "আদন", c: "মাওয়া", d: "খুলদ", ans: "a" },
+            { q: "জাহান্নামের নিচু স্তরকে কী বলে?", a: "হুতামা", b: "সাকার", c: "লাযা", d: "জাহিম", ans: "a" },
+            { q: "পুলসিরাত কিসের ওপর স্থাপিত?", a: "জাহান্নামের ওপর", b: "জান্নাতের ওপর", c: "পৃথিবীর ওপর", d: "আকাশের ওপর", ans: "a" },
+            { q: "হাউজে কাউসার কী?", a: "নবীজির পুকুর", b: "জান্নাতের নদী", c: "জাহান্নামের নদী", d: "পৃথিবীর নদী", ans: "a" },
+            { q: "মিজান কী?", a: "নেকি-গুনাহের দাঁড়িপাল্লা", b: "জান্নাতের সেতু", c: "জাহান্নামের সেতু", d: "কিয়ামতের সেতু", ans: "a" },
+            { q: "কিয়ামতের দিন মানুষের কয়টি অবস্থা হবে?", a: "৩", b: "৪", c: "৫", d: "৬", ans: "a" },
+            { q: "আমলনামা কেমন হবে?", a: "ডান হাতে বা বাম হাতে", b: "সবাই ডান হাতে", c: "সবাই বাম হাতে", d: "সবার একই", ans: "a" },
+            { q: "কিয়ামতের হিসাব কতক্ষণ চলবে?", a: "৫০ হাজার বছর", b: "১০ হাজার বছর", c: "১০০ হাজার বছর", d: "১ লাখ বছর", ans: "a" },
+            { q: "কিয়ামতের সময় কী হবে?", a: "সবকিছু ধ্বংস", b: "সবকিছু নতুন", c: "সবকিছু আলাদা", d: "সবকিছু একই", ans: "a" },
+            { q: "কিয়ামতের পর কী হবে?", a: "হাশর-নশর", b: "জান্নাত-জাহান্নাম", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "জান্নাতের সুখ কেমন?", a: "অফুরন্ত", b: "সীমিত", c: "শারীরিক", d: "আত্মিক", ans: "a" },
+            { q: "জাহান্নামের শাস্তি কেমন?", a: "চিরস্থায়ী", b: "অস্থায়ী", c: "শারীরিক", d: "আত্মিক", ans: "a" },
+            { q: "আল্লাহর রহমত কীসের চেয়ে বেশি?", a: "আল্লাহর গজব", b: "শয়তানের প্রভাব", c: "মানুষের পাপ", d: "ফেরেশতার ইবাদত", ans: "a" },
+            { q: "আয়াতুল কুরসি কোন সূরায়?", a: "সূরা বাকারা", b: "সূরা ইমরান", c: "সূরা নিসা", d: "সূরা মায়িদা", ans: "a" },
+            { q: "কুরআনের সর্বশেষ সূরা কোনটি?", a: "সূরা নাস", b: "সূরা ফালাক", c: "সূরা ইখলাস", d: "সূরা কাউসার", ans: "a" }
+        ];
+
+        const hardQuestions = [
+            { q: "কুরআনের কোন সূরায় বাধ্যতামূলক সিজদা আছে?", a: "সূরা আলাক", b: "সূরা বাকারা", c: "সূরা ইমরান", d: "সূরা নিসা", ans: "a" },
+            { q: "সূরা বাকারার শেষ দুই আয়াতকে কী বলে?", a: "আমানার রাসূল", b: "আয়াতুল কুরসি", c: "খাতামাতুল বাকারা", d: "সূরা ফাতিহা", ans: "a" },
+            { q: "কোন সূরায় বাকারার উল্লেখ আছে?", a: "সূরা বাকারা", b: "সূরা ইমরান", c: "সূরা নিসা", d: "সূরা মায়িদা", ans: "a" },
+            { q: "সাইয়্যিদুল ইস্তিগফার কী?", a: "আল্লাহুম্মা আন্তা রাব্বি", b: "সুবহানাল্লাহ", c: "আলহামদুলিল্লাহ", d: "লা ইলাহা ইল্লাল্লাহ", ans: "a" },
+            { q: "দাজ্জালের আবির্ভাব কোথায় হবে?", a: "পূর্ব দিকে", b: "পশ্চিম দিকে", c: "উত্তর দিকে", d: "দক্ষিণ দিকে", ans: "a" },
+            { q: "ঈসা (আ.) কোথায় নাযিল হবেন?", a: "দামেস্ক", b: "মক্কা", c: "মদিনা", d: "কুফা", ans: "a" },
+            { q: "ইয়াজুজ-মাজুজ কোথা থেকে বের হবে?", a: "চীনের দেয়ালের পিছনে", b: "আরব", c: "আফ্রিকা", d: "ইউরোপ", ans: "a" },
+            { q: "সূর্য কোথা থেকে উদিত হবে?", a: "পশ্চিম থেকে", b: "পূর্ব থেকে", c: "উত্তর থেকে", d: "দক্ষিণ থেকে", ans: "a" },
+            { q: "কিয়ামতের দিন মানুষ কোথায় জমায়েত হবে?", a: "ময়দানে মাহশর", b: "জান্নাত", c: "জাহান্নাম", d: "আরাফাত", ans: "a" },
+            { q: "জান্নাতের নাম কয়টি?", a: "৮", b: "৭", c: "৬", d: "৫", ans: "a" },
+            { q: "জাহান্নামের নাম কয়টি?", a: "৭", b: "৮", c: "৬", d: "৫", ans: "a" },
+            { q: "জান্নাতের সর্বোচ্চ স্তর কোনটি?", a: "ফেরদাউস", b: "আদন", c: "মাওয়া", d: "খুলদ", ans: "a" },
+            { q: "জাহান্নামের সর্বনিম্ন স্তর কোনটি?", a: "হুতামা", b: "সাকার", c: "লাযা", d: "জাহিম", ans: "a" },
+            { q: "পুলসিরাত কত দিনের পথ?", a: "৫০০ বছর", b: "১০০০ বছর", c: "৫০ হাজার বছর", d: "১০ হাজার বছর", ans: "a" },
+            { q: "হাউজে কাউসারের পানি কেমন?", a: "দুধের চেয়ে সাদা", b: "মধুর চেয়ে মিষ্টি", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "মিজানের পাল্লা কেমন?", a: "২টি", b: "৩টি", c: "৪টি", d: "১টি", ans: "a" },
+            { q: "আমলনামা কোথা থেকে পড়া হবে?", a: "ডান হাত থেকে", b: "বাম হাত থেকে", c: "উভয়", d: "কোনটিই নয়", ans: "a" },
+            { q: "জান্নাতের নিচে কী প্রবাহিত হয়?", a: "নদী", b: "আগুন", c: "ধোঁয়া", d: "পাথর", ans: "a" },
+            { q: "জাহান্নামের আগুন কেমন?", a: "সর্বদা জ্বলন্ত", b: "কখনো জ্বলে, কখনো নিভে", c: "ঠান্ডা", d: "নিরাপদ", ans: "a" },
+            { q: "তওরাত কার ওপর নাযিল হয়?", a: "মুসা", b: "ঈসা", c: "দাউদ", d: "মুহাম্মদ", ans: "a" },
+            { q: "ইঞ্জিল কার ওপর নাযিল হয়?", a: "ঈসা", b: "মুসা", c: "দাউদ", d: "মুহাম্মদ", ans: "a" },
+            { q: "যাবুর কার ওপর নাযিল হয়?", a: "দাউদ", b: "মুসা", c: "ঈসা", d: "মুহাম্মদ", ans: "a" },
+            { q: "কুরআন কার ওপর নাযিল হয়?", a: "মুহাম্মদ", b: "মুসা", c: "ঈসা", d: "দাউদ", ans: "a" },
+            { q: "সুহুফ কার ওপর নাযিল হয়?", a: "ইব্রাহিম ও মুসা", b: "দাউদ", c: "ঈসা", d: "মুহাম্মদ", ans: "a" },
+            { q: "আল্লাহর কোন সিফাত সবচেয়ে বড়?", a: "কুদরত", b: "ইলম", c: "হায়াত", d: "ইরাদা", ans: "a" },
+            { q: "আল্লাহর কোন সিফাত 'সবকিছু জানা'?", a: "ইলম", b: "কুদরত", c: "হায়াত", d: "ইরাদা", ans: "a" },
+            { q: "আল্লাহর কোন সিফাত 'সবকিছু করার ক্ষমতা'?", a: "কুদরত", b: "ইলম", c: "হায়াত", d: "ইরাদা", ans: "a" },
+            { q: "আল্লাহর কোন সিফাত 'চিরঞ্জীব'?", a: "হায়াত", b: "ইলম", c: "কুদরত", d: "ইরাদা", ans: "a" },
+            { q: "আল্লাহর কোন সিফাত 'ইচ্ছা'?", a: "ইরাদা", b: "ইলম", c: "কুদরত", d: "হায়াত", ans: "a" },
+            { q: "বনী ইসরাঈল কাকে বলে?", a: "হযরত ইয়াকুবের সন্তান", b: "হযরত ইব্রাহিমের সন্তান", c: "হযরত ইসমাইলের সন্তান", d: "হযরত ইসহাকের সন্তান", ans: "a" },
+            { q: "হিজরত কত সালে ঘটে?", a: "৬২২ খ্রি.", b: "৬১০ খ্রি.", c: "৬৩০ খ্রি.", d: "৬০০ খ্রি.", ans: "a" },
+            { q: "ইসলামের দ্বিতীয় খলিফা কে?", a: "উমর", b: "আবু বকর", c: "উসমান", d: "আলী", ans: "a" },
+            { q: "ইসলামের তৃতীয় খলিফা কে?", a: "উসমান", b: "উমর", c: "আবু বকর", d: "আলী", ans: "a" },
+            { q: "ইসলামের চতুর্থ খলিফা কে?", a: "আলী", b: "উসমান", c: "উমর", d: "আবু বকর", ans: "a" },
+            { q: "আল্লাহর কয়টি আসমান?", a: "৭", b: "৫", c: "৩", d: "৯", ans: "a" },
+            { q: "আল্লাহর কয়টি জাহান্নাম?", a: "৭", b: "৫", c: "৩", d: "৯", ans: "a" },
+            { q: "আল্লাহর কয়টি জান্নাত?", a: "৮", b: "৭", c: "৬", d: "৫", ans: "a" },
+            { q: "আল্লাহর আরশ কয়টি ফেরেশতা বহন করে?", a: "৪", b: "৫", c: "৬", d: "৭", ans: "a" },
+            { q: "আল্লাহর সিংহাসন কয়টি?", a: "১", b: "২", c: "৩", d: "৪", ans: "a" },
+            { q: "আল্লাহর কুরসি কয়টি?", a: "১", b: "২", c: "৩", d: "৪", ans: "a" },
+            { q: "আল্লাহর আরশ ও কুরসি কি এক?", a: "না, আলাদা", b: "হ্যাঁ, এক", c: "অংশ", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর আরশ কোথায়?", a: "৭ম আসমানে", b: "৬ষ্ঠ আসমানে", c: "৫ম আসমানে", d: "৪র্থ আসমানে", ans: "a" },
+            { q: "আল্লাহর কুরসি কোথায়?", a: "আরশের নিচে", b: "আরশের উপরে", c: "আরশের পাশে", d: "আরশের বিপরীতে", ans: "a" },
+            { q: "আল্লাহর আরশ কিসের তৈরি?", a: "নূর", b: "আলো", c: "আগুন", d: "পানি", ans: "a" },
+            { q: "আল্লাহর কুরসি কিসের তৈরি?", a: "নূর", b: "আলো", c: "আগুন", d: "পানি", ans: "a" },
+            { q: "আল্লাহর সিফাত কয়টি?", a: "অসংখ্য", b: "৯৯", c: "১০০", d: "৯৮", ans: "a" },
+            { q: "আল্লাহর জাতি সিফাত কয়টি?", a: "৫", b: "৬", c: "৭", d: "৮", ans: "a" },
+            { q: "আল্লাহর সালবি সিফাত কয়টি?", a: "৫", b: "৬", c: "৭", d: "৮", ans: "a" },
+            { q: "আল্লাহর ফেলী সিফাত কয়টি?", a: "অসংখ্য", b: "৫", c: "৬", d: "৭", ans: "a" },
+            { q: "আল্লাহর জাতি সিফাত কোনগুলো?", a: "হায়াত, ইলম, কুদরত, ইরাদা, সামা, বাসার, কালাম", b: "হায়াত, ইলম, কুদরত", c: "ইলম, কুদরত", d: "শুধু হায়াত", ans: "a" },
+            { q: "আল্লাহর সালবি সিফাত কোনগুলো?", a: "কাদিম, বাকি, মুখালিফাতুল হাওয়াদিস, কিয়ামু বিনাফসিহি, ওয়াহদানিয়্যাত", b: "হায়াত, ইলম", c: "কুদরত, ইরাদা", d: "সামা, বাসার", ans: "a" },
+            { q: "আল্লাহর কালাম কী?", a: "কুরআন", b: "হাদীস", c: "সুন্নাহ", d: "ফিকহ", ans: "a" },
+            { q: "আল্লাহর কালাম কিসের তৈরি?", a: "হরফ ও শব্দ", b: "আলো", c: "আগুন", d: "পানি", ans: "a" },
+            { q: "আল্লাহর কালাম কি সৃষ্ট?", a: "না, অনাদি", b: "হ্যাঁ, সৃষ্ট", c: "আংশিক", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর কালাম কয় প্রকার?", a: "২", b: "৩", c: "৪", d: "৫", ans: "a" },
+            { q: "আল্লাহর কালামের প্রথম প্রকার?", a: "লাওহে মাহফুজ", b: "কুরআন", c: "হাদীস", d: "সুন্নাহ", ans: "a" },
+            { q: "আল্লাহর কালামের দ্বিতীয় প্রকার?", a: "কুরআন", b: "হাদীস", c: "সুন্নাহ", d: "ফিকহ", ans: "a" },
+            { q: "আল্লাহর কালাম কোথায় লিপিবদ্ধ?", a: "লাওহে মাহফুজে", b: "আরশে", c: "কুরসিতে", d: "আসমানে", ans: "a" },
+            { q: "আল্লাহর কালাম কি পরিবর্তনশীল?", a: "না, চিরন্তন", b: "হ্যাঁ", c: "আংশিক", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর কালাম কি মাখলুক?", a: "না, গায়রে মাখলুক", b: "হ্যাঁ", c: "আংশিক", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর আরশ ও কুরসি কি সৃষ্ট?", a: "হ্যাঁ", b: "না", c: "আংশিক", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর আরশ কখন সৃষ্ট?", a: "অনাদিকাল", b: "আদি সৃষ্টিতে", c: "পরে", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর কুরসি কখন সৃষ্ট?", a: "অনাদিকাল", b: "আদি সৃষ্টিতে", c: "পরে", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর আরশ কতদিনে সৃষ্ট?", a: "৬ দিনে", b: "৪ দিনে", c: "২ দিনে", d: "১ দিনে", ans: "a" },
+            { q: "আল্লাহর কুরসি কতদিনে সৃষ্ট?", a: "৬ দিনে", b: "৪ দিনে", c: "২ দিনে", d: "১ দিনে", ans: "a" },
+            { q: "আল্লাহর আরশ ও কুরসি কি একই?", a: "না, আলাদা", b: "হ্যাঁ", c: "আংশিক", d: "কোনটিই নয়", ans: "a" },
+            { q: "আল্লাহর আরশ কিসের উর্ধ্বে?", a: "সবকিছুর", b: "আসমানের", c: "জমিনের", d: "জান্নাতের", ans: "a" },
+            { q: "আল্লাহর কুরসি কিসের উর্ধ্বে?", a: "আসমানের", b: "জমিনের", c: "জান্নাতের", d: "জাহান্নামের", ans: "a" },
+            { q: "আল্লাহর আরশের নিচে কী আছে?", a: "কুরসি", b: "জান্নাত", c: "জাহান্নাম", d: "পৃথিবী", ans: "a" },
+            { q: "আল্লাহর কুরসির নিচে কী আছে?", a: "আসমান", b: "জমিন", c: "জান্নাত", d: "জাহান্নাম", ans: "a" }
+        ];
+
+        // ===== ৩টি স্টেপের জন্য ৫০টি করে প্রশ্ন সিলেক্ট =====
+        function getQuestionsForStep(step) {
+            shuffle(easyQuestions);
+            shuffle(mediumQuestions);
+            shuffle(hardQuestions);
+            
+            let selectedEasy = [], selectedMedium = [], selectedHard = [];
+            
+            if (step === 1) {
+                selectedEasy = easyQuestions.slice(0, 7);
+                selectedMedium = mediumQuestions.slice(0, 5);
+                selectedHard = hardQuestions.slice(0, 5);
+            } else if (step === 2) {
+                selectedEasy = easyQuestions.slice(0, 7);
+                selectedMedium = mediumQuestions.slice(0, 5);
+                selectedHard = hardQuestions.slice(0, 5);
+            } else {
+                selectedEasy = easyQuestions.slice(0, 6);
+                selectedMedium = mediumQuestions.slice(0, 5);
+                selectedHard = hardQuestions.slice(0, 5);
+            }
+            
+            let combined = [...selectedEasy, ...selectedMedium, ...selectedHard];
+            shuffle(combined);
+            return combined;
+        }
+
+        // ===== QUIZ ENGINE =====
+        let currentStepQuestions = [];
+
+        function loadStep(s) {
+            currentStep = s;
+            currentIdx = 0;
+            
+            const stepQ = getQuestionsForStep(s);
+            currentStepQuestions = stepQ.map(q => shuffleOptions(q));
+            
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'block';
+            renderQ();
+            if (s === 1) startTimer();
+        }
+
+        function shuffleOptions(question) {
+            const options = [
+                { key: 'a', text: question.a },
+                { key: 'b', text: question.b },
+                { key: 'c', text: question.c },
+                { key: 'd', text: question.d }
+            ];
+            shuffle(options);
+            const newQuestion = { 
+                q: question.q, 
+                ans: question.ans
+            };
+            options.forEach((opt, index) => {
+                const key = String.fromCharCode(97 + index);
+                newQuestion[key] = opt.text;
+                if (opt.key === question.ans) newQuestion.ans = key;
+            });
+            return newQuestion;
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderQ() {
+            const q = currentStepQuestions[currentIdx];
+            const questionNum = ((currentStep - 1) * 50) + currentIdx + 1;
+            document.getElementById('stepDisplay').innerText = 'প্রশ্ন: ' + questionNum + '/৫০';
+            document.getElementById('question').innerHTML = q.q;
+
+            const totalProgress = (questionNum / 50) * 100;
+            document.getElementById('progressFill').style.width = totalProgress + '%';
+
+            const optDiv = document.getElementById('options');
+            optDiv.innerHTML = '';
+            const keys = ['a', 'b', 'c', 'd'];
+
+            keys.forEach(k => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = q[k];
+                btn.dataset.key = k;
+                btn.onclick = () => check(btn, k);
+                optDiv.appendChild(btn);
+            });
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('signal5050').style.display = 'none';
+            toggleLifelineUI();
+        }
+
+        // ===== CHECK FUNCTION WITH ALL MYSTERY BOX FEATURES =====
+        function check(btn, choiceKey) {
+            const q = currentStepQuestions[currentIdx];
+            const all = document.querySelectorAll('.option-btn');
+
+            // যদি স্কিপ অ্যাক্টিভ থাকে, তাহলে সরাসরি স্কিপ করুন
+            if (skipQuestionActive) {
+                skipQuestionActive = false;
+                document.getElementById('signalSkip').style.display = 'none';
+                document.getElementById('llSkip').classList.remove('active');
+                alert('⏭️ আপনি এই প্রশ্নটি স্কিপ করেছেন! পরবর্তী প্রশ্নে চলে যাচ্ছেন...');
+                handleNext();
+                return;
+            }
+
+            if (choiceKey === q.ans) {
+                all.forEach(b => b.classList.add('disabled'));
+                btn.classList.add('correct');
+                playSound('correct');
+                totalTime += 5;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                
+                // ডাবল স্কোর চেক
+                if (doubleScoreActive) {
+                    correctCount += 2;
+                    doubleScoreActive = false;
+                    document.getElementById('signalDouble').style.display = 'none';
+                } else {
+                    correctCount++;
+                }
+                
+                streakCount++;
+
+                if (streakCount === 10) {
+                    checkMysteryBox();
+                } else {
+                    document.getElementById('nextBtn').style.display = 'block';
+                }
+            } else {
+                // ভুল করলে ডাবল স্কোর, স্কিপ, হিন্ট রিসেট
+                doubleScoreActive = false;
+                document.getElementById('signalDouble').style.display = 'none';
+                skipQuestionActive = false;
+                document.getElementById('signalSkip').style.display = 'none';
+                document.getElementById('llSkip').classList.remove('active');
+                hintActive = false;
+                hintUsedForCurrentQ = false;
+                document.getElementById('signalHint').style.display = 'none';
+                document.getElementById('llHint').classList.remove('active');
+                
+                wrongCount++;
+                streakCount = 0;
+                
+                if (isGuardActiveNow) {
+                    isGuardActiveNow = false;
+                    document.getElementById('signalGuard').style.display = 'none';
+                    btn.classList.add('wrong');
+                    btn.classList.add('disabled');
+                    playSound('wrong');
+                    totalTime = Math.max(0, totalTime - 5);
+                    document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                    alert('🛡️ লাইফ গার্ড বাঁচিয়েছে! কিন্তু -৫ সেকেন্ড ও স্ট্রিক রিসেট!');
+                    document.getElementById('nextBtn').style.display = 'block';
+                } else {
+                    all.forEach(b => b.classList.add('disabled'));
+                    btn.classList.add('wrong');
+                    playSound('wrong');
+                    totalTime = Math.max(0, totalTime - 5);
+                    document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                    all.forEach(b => { if (b.dataset.key === q.ans) b.classList.add('correct'); });
+                    document.getElementById('nextBtn').style.display = 'block';
+                }
+            }
+        }
+
+        function handleNext() {
+            // হিন্ট রিসেট করুন নতুন প্রশ্নের জন্য
+            hintUsedForCurrentQ = false;
+            
+            currentIdx++;
+            if (currentIdx < 50) { 
+                renderQ(); 
+            } else if (currentStep < 3) { 
+                loadStep(currentStep + 1); 
+            } else {
+                showFinalResult();
+            }
+        }
+
+        // ===== SKIP QUESTION FUNCTION =====
+        function useSkipQuestion() {
+            if (!skipQuestionActive) {
+                alert('⚠️ আপনার কাছে স্কিপ প্রশ্নের সুযোগ নেই! মিস্টারি বক্স থেকে সংগ্রহ করুন।');
+                return;
+            }
+            if (!quizActive) return;
+            
+            // স্কিপ ব্যবহার করার জন্য check ফাংশনে হ্যান্ডেল করা হবে
+            // বাটনটি প্রেস করলে check ফাংশনে গিয়ে স্কিপ হবে
+            document.getElementById('llSkip').classList.add('active');
+            alert('⏭️ "স্কিপ" বাটনটি সক্রিয়! পরবর্তী প্রশ্নে যেতে একটি অপশনে ক্লিক করুন।');
+        }
+
+        // ===== HINT FUNCTION =====
+        function useHint() {
+            if (!hintActive) {
+                alert('⚠️ আপনার কাছে হিন্ট নেই! মিস্টারি বক্স থেকে সংগ্রহ করুন।');
+                return;
+            }
+            if (!quizActive) return;
+            if (hintUsedForCurrentQ) {
+                alert('⚠️ এই প্রশ্নের জন্য হিন্ট আগেই ব্যবহার করেছেন!');
+                return;
+            }
+            
+            const q = currentStepQuestions[currentIdx];
+            const correctAnswer = q[q.ans];
+            const firstLetter = correctAnswer.charAt(0);
+            
+            hintUsedForCurrentQ = true;
+            hintActive = false;
+            document.getElementById('signalHint').style.display = 'none';
+            document.getElementById('llHint').classList.remove('active');
+            
+            alert(`💡 হিন্ট: এই প্রশ্নের সঠিক উত্তর "${firstLetter}" অক্ষর দিয়ে শুরু হয়!`);
+            playSound('correct');
+        }
+
+        // ===== MYSTERY BOX =====
+        function checkMysteryBox() {
+            if (streakCount !== 10) return;
+            streakCount = 0;
+
+            clearInterval(timer);
+
+            setTimeout(() => {
+                const overlay = document.createElement('div');
+                overlay.className = 'mystery-overlay';
+                overlay.id = 'mysteryOverlay';
+
+                overlay.innerHTML = `
+                    <div class="mystery-box-card">
+                        <h2 style="margin-bottom:12px; font-size:20px; color:#18661F;">🎁 মিস্টারি বক্স! 🎁</h2>
+                        <p style="font-weight:bold; margin-bottom:20px; font-size:13px;">টানা ১০টি সঠিক উত্তর! বক্সে ক্লিক করুন 🎯</p>
+                        <div class="mystery-gift-icon" onclick="openMysteryBox(this)">📦</div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }, 400);
+        }
+
+        function openMysteryBox(element) {
+            element.style.pointerEvents = 'none';
+            element.innerText = '🎁';
+
+            let reward = mysteryRewards[Math.floor(Math.random() * mysteryRewards.length)];
+            let msg = '';
+
+            // Bonus: আরও ১টি রিওয়ার্ড পাবেন
+            if (reward === 'bonus') {
+                reward = mysteryRewards[Math.floor(Math.random() * mysteryRewards.length)];
+                msg = '🎁 বোনাস! আরও ১টি রিওয়ার্ড পেলেন!\n\n';
+            }
+
+            if (reward === 'life_restore') {
+                const lifelines = ['ll5050', 'llTime', 'llAnswer', 'llPoll', 'llGuard'];
+                const used = lifelines.filter(id => {
+                    const btn = document.getElementById(id);
+                    return btn && btn.disabled;
+                });
+                if (used.length) {
+                    const restore = used[Math.floor(Math.random() * used.length)];
+                    const btn = document.getElementById(restore);
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('active');
+                        if (restore === 'll5050') state5050 = false;
+                        if (restore === 'llTime') stateTime = false;
+                        if (restore === 'llAnswer') stateAnswer = false;
+                        if (restore === 'llPoll') statePoll = false;
+                        if (restore === 'llGuard') stateGuard = false;
+                    }
+                    msg += '🎁 বোনাস! ১টি লাইফলাইন ফিরে পেলেন!';
+                } else {
+                    totalTime += 20;
+                    document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                    msg += '⏱️ +২০ সেকেন্ড বোনাস! (সব লাইফলাইন আগে থেকেই ব্যবহার করা)';
+                }
+            } 
+            else if (reward === 'guard') {
+                isGuardActiveNow = true;
+                document.getElementById('signalGuard').style.display = 'inline-block';
+                msg += '🛡️ অটো লাইফ গার্ড! (পরবর্তী ১টি ভুল থেকে রক্ষা)';
+            } 
+            else if (reward === 'time_20') {
+                totalTime += 20;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                msg += '⏱️ +২০ সেকেন্ড বোনাস!';
+            } 
+            else if (reward === 'time_30') {
+                totalTime += 30;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                msg += '⏱️ +৩০ সেকেন্ড বোনাস!';
+            } 
+            else if (reward === 'time_50') {
+                totalTime += 50;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                msg += '⏱️ +৫০ সেকেন্ড বোনাস!';
+            } 
+            else if (reward === 'time_60') {
+                totalTime += 60;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                msg += '⏱️ +৬০ সেকেন্ড বোনাস!';
+            } 
+            else if (reward === 'free_score') {
+                correctCount++;
+                msg += '🎯 ফ্রি স্কোর! +১ পয়েন্ট!';
+            } 
+            else if (reward === 'double_score') {
+                doubleScoreActive = true;
+                document.getElementById('signalDouble').style.display = 'inline-block';
+                msg += '🔥 ডাবল স্কোর! পরবর্তী সঠিক উত্তরে +২ পয়েন্ট!';
+            } 
+            else if (reward === 'skip_question') {
+                skipQuestionActive = true;
+                document.getElementById('signalSkip').style.display = 'inline-block';
+                msg += '⏭️ স্কিপ প্রশ্ন! "স্কিপ" বাটনে ক্লিক করে ব্যবহার করুন!';
+            } 
+            else if (reward === 'extra_time') {
+                totalTime += 30;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                msg += '⏱️ +৩০ সেকেন্ড এক্সট্রা টাইম!';
+            } 
+            else if (reward === 'hint') {
+                hintActive = true;
+                hintUsedForCurrentQ = false;
+                document.getElementById('signalHint').style.display = 'inline-block';
+                msg += '💡 হিন্ট পাওয়া গেল! "হিন্ট" বাটনে ক্লিক করে উত্তর দেখুন!';
+            }
+
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+
+            element.parentElement.innerHTML = `
+                <h2 style="color:#18661F; margin-bottom:12px;">🎉 অভিনন্দন!</h2>
+                <div style="font-size:50px; margin-bottom:12px;">🎁</div>
+                <p style="font-weight:bold; font-size:14px; line-height:1.5; color:#222; white-space:pre-line;">${msg}</p>
+                <button class="btn-main" style="margin-top:18px; background:var(--primary); font-size:14px;" onclick="closeMysteryBox()">চালিয়ে যান ➜</button>
+            `;
+        }
+
+        function closeMysteryBox() {
+            const overlay = document.getElementById('mysteryOverlay');
+            if (overlay) overlay.remove();
+            startTimer();
+            handleNext();
+        }
+
+        // ===== SCORE CALCULATION =====
+        function calculateFinalScore() {
+            const deduction = Math.floor(wrongCount / 4);
+            const finalScore = Math.max(0, correctCount - deduction);
+            return { finalScore, deduction };
+        }
+
+        function showFinalResult() {
+            clearInterval(timer);
+            quizActive = false;
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            document.getElementById('displayPlayerName').innerText = playerName;
+            
+            const { finalScore, deduction } = calculateFinalScore();
+            document.getElementById('finalScore').innerText = finalScore;
+            
+            document.getElementById('scoreBreakdown').innerHTML = 
+                `✅ সঠিক: ${correctCount} | ❌ ভুল: ${wrongCount} | ➖ কাটা: ${deduction} (প্রতি ৪ ভুলে ১)`;
+
+            const endTime = new Date();
+            const timeTaken = startTime ? Math.round((endTime - startTime) / 1000) : 0;
+
+            sendToGoogleSheets({
+                type: 'result',
+                name: playerName,
+                mobile: playerMobile,
+                entryCode: entryCode,
+                correct: correctCount,
+                wrong: wrongCount,
+                deduction: deduction,
+                score: finalScore,
+                totalTime: timeTaken,
+                timestamp: endTime.toISOString()
+            });
+
+            const scores = getScores();
+            scores[playerMobile] = finalScore;
+            setScores(scores);
+
+            updateAdminLeaderboard();
+            updateParticipantCount();
+
+            if (finalScore >= 40) {
+                confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+            }
+
+            document.getElementById('saveMsg').innerHTML = '✅ ফলাফল সংরক্ষিত হয়েছে! Google Sheets-এও পাঠানো হয়েছে।';
+        }
+
+        // ===== LIFELINES =====
+        function toggleLifelineUI() {
+            document.getElementById('ll5050').disabled = state5050;
+            document.getElementById('llTime').disabled = stateTime;
+            document.getElementById('llAnswer').disabled = stateAnswer;
+            document.getElementById('llPoll').disabled = statePoll;
+            document.getElementById('llGuard').disabled = stateGuard;
+            // স্কিপ ও হিন্ট বাটন সবসময় সক্রিয় থাকবে (কিন্তু ফাংশন চেক করবে রিওয়ার্ড আছে কিনা)
+        }
+
+        function use5050() {
+            if (state5050 || !quizActive) return;
+            const buttons = Array.from(document.querySelectorAll('.option-btn'));
+            if (buttons.length === 0 || buttons[0].classList.contains('disabled')) return;
+
+            state5050 = true;
+            document.getElementById('ll5050').classList.add('active');
+            document.getElementById('signal5050').style.display = 'inline-block';
+            toggleLifelineUI();
+
+            const q = currentStepQuestions[currentIdx];
+            let wrongButtons = buttons.filter(b => b.dataset.key !== q.ans);
+            shuffle(wrongButtons);
+            wrongButtons.slice(0, 2).forEach(b => b.classList.add('hidden-option'));
+
+            playSound('correct');
+        }
+
+        function useTimeBonus() {
+            if (stateTime || !quizActive) return;
+            stateTime = true;
+            document.getElementById('llTime').classList.add('active');
+            toggleLifelineUI();
+
+            totalTime += 30;
+            document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+            alert('⏱️ +৩০ সেকেন্ড বোনাস!');
+            playSound('correct');
+        }
+
+        function useShowAnswer() {
+            if (stateAnswer || !quizActive) return;
+            const buttons = Array.from(document.querySelectorAll('.option-btn'));
+            if (buttons.length === 0 || buttons[0].classList.contains('disabled')) return;
+
+            stateAnswer = true;
+            document.getElementById('llAnswer').classList.add('active');
+            toggleLifelineUI();
+
+            const q = currentStepQuestions[currentIdx];
+            buttons.forEach(b => {
+                b.classList.add('disabled');
+                if (b.dataset.key === q.ans) b.classList.add('correct');
+            });
+
+            playSound('correct');
+            totalTime += 5;
+            document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+            correctCount++;
+            streakCount++;
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function useAudiencePoll() {
+            if (statePoll || !quizActive) return;
+            const buttons = Array.from(document.querySelectorAll('.option-btn'));
+            if (buttons.length === 0 || buttons[0].classList.contains('disabled')) return;
+
+            statePoll = true;
+            document.getElementById('llPoll').classList.add('active');
+            toggleLifelineUI();
+
+            const q = currentStepQuestions[currentIdx];
+            const keys = ['a', 'b', 'c', 'd'];
+            let correctVote = Math.floor(Math.random() * (75 - 55 + 1)) + 55;
+            let remaining = 100 - correctVote;
+
+            buttons.forEach((btn, index) => {
+                const k = keys[index];
+                const pollEl = document.createElement('span');
+                pollEl.className = 'poll-percentage';
+                pollEl.style.display = 'inline-block';
+
+                if (k === q.ans) {
+                    pollEl.innerText = correctVote + '%';
+                } else {
+                    let vote = Math.floor(Math.random() * remaining);
+                    remaining -= vote;
+                    if (index === keys.length - 1 || remaining < 0) { vote += remaining; remaining = 0; }
+                    pollEl.innerText = vote + '%';
+                }
+                btn.appendChild(pollEl);
+            });
+
+            playSound('correct');
+        }
+
+        function useLifeGuard() {
+            if (stateGuard || !quizActive) return;
+            stateGuard = true;
+            isGuardActiveNow = true;
+            document.getElementById('llGuard').classList.add('active');
+            document.getElementById('signalGuard').style.display = 'inline-block';
+            toggleLifelineUI();
+
+            alert('🛡️ লাইফ গার্ড সক্রিয়! ভুল উত্তরে রক্ষা পাবেন।');
+            playSound('correct');
+        }
+
+        // ===== TIMER =====
+        function startTimer() {
+            const timerBadge = document.getElementById('timerBadge');
+            timer = setInterval(() => {
+                totalTime--;
+                if (totalTime < 0) totalTime = 0;
+                document.getElementById('time').innerText = totalTime.toString().padStart(2, '0');
+                if (totalTime <= 10) timerBadge.classList.add('pulse');
+                if (totalTime <= 0) {
+                    clearInterval(timer);
+                    showFinalResult();
+                }
+            }, 1000);
+        }
+
+        // ===== ENTRY CODE =====
+        function generateEntryCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars[Math.floor(Math.random() * chars.length)];
+            }
+
+            const codes = getActiveCodes();
+            codes.push({ code, used: false, generatedAt: new Date().toISOString() });
+            setActiveCodes(codes);
+
+            alert(`✅ নতুন এন্ট্রি কোড তৈরি হয়েছে!\n\n🎫 কোড: ${code}\n\n📌 এই কোডটি সবাইকে দিন।\n⚠️ কোডটি ১ বার ব্যবহার করা যাবে।`);
+
+            updateParticipantCount();
+            updateAdminLeaderboard();
+            return code;
+        }
+
+        function verifyEntryCode() {
+            const code = document.getElementById('entryCode').value.trim().toUpperCase();
+            const statusDiv = document.getElementById('entryStatus');
+
+            if (!code || code.length < 4) {
+                statusDiv.className = 'status-message error';
+                statusDiv.innerText = '❌ সঠিক কোড দিন!';
+                return;
+            }
+
+            const codes = getActiveCodes();
+            const idx = codes.findIndex(c => c.code === code && !c.used);
+
+            if (idx === -1) {
+                statusDiv.className = 'status-message error';
+                statusDiv.innerText = '❌ কোড ভুল বা ইতিমধ্যে ব্যবহার করা হয়েছে!';
+                isEntryVerified = false;
+                document.getElementById('startBtn').disabled = true;
+                return;
+            }
+
+            codes[idx].used = true;
+            setActiveCodes(codes);
+
+            isEntryVerified = true;
+            entryCode = code;
+            statusDiv.className = 'status-message success';
+            statusDiv.innerText = '✅ কোড ভেরিফাইড! এখন নিবন্ধন করুন।';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').innerText = '📝 কুইজ শুরু করুন';
+        }
+
+        // ===== REGISTRATION =====
+        function registerAndStart() {
+            if (!isEntryVerified) {
+                alert('❌ এন্ট্রি কোড ভেরিফাই করুন!');
+                return;
+            }
+
+            playerName = document.getElementById('playerName').value.trim();
+            playerMobile = document.getElementById('playerMobile').value.trim();
+
+            if (!playerName) return alert('নাম দিন!');
+            if (!/^\d{11}$/.test(playerMobile)) return alert('সঠিক মোবাইল নাম্বার দিন!');
+
+            const participants = getParticipants();
+            if (participants.some(p => p.mobile === playerMobile)) {
+                return alert('⚠️ এই মোবাইল ইতিমধ্যে নিবন্ধিত!');
+            }
+
+            if (!getCompetitionStatus()) {
+                return alert('⏳ কম্পিটিশন এখনো শুরু হয়নি!');
+            }
+
+            participants.push({
+                name: playerName,
+                mobile: playerMobile,
+                entryCode: entryCode,
+                entryVerified: true,
+                registeredAt: new Date().toISOString()
+            });
+            setParticipants(participants);
+
+            const scores = getScores();
+            if (!scores[playerMobile]) {
+                scores[playerMobile] = 0;
+                setScores(scores);
+            }
+
+            sendToGoogleSheets({
+                type: 'registration',
+                name: playerName,
+                mobile: playerMobile,
+                entryCode: entryCode,
+                timestamp: new Date().toISOString()
+            });
+
+            updateParticipantCount();
+            updateAdminLeaderboard();
+
+            initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+            startTime = new Date();
+            quizActive = true;
+            loadStep(1);
+        }
+
+        // ===== COMPETITION MANAGEMENT =====
+        function showAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                return;
+            }
+
+            const pwd = prompt('🔐 অ্যাডমিন পাসওয়ার্ড দিন:');
+            if (pwd === ADMIN_PASSWORD) {
+                panel.style.display = 'block';
+                updateParticipantCount();
+                updateAdminLeaderboard();
+            } else if (pwd !== null) {
+                alert('❌ ভুল পাসওয়ার্ড!');
+            }
+        }
+
+        function startCompetition() {
+            if (!confirm('🚀 কম্পিটিশন শুরু করতে চান?')) return;
+            setCompetitionStatus(true);
+            isCompetitionActive = true;
+            alert('✅ কম্পিটিশন চালু হয়েছে! এখন সবাই অংশ নিতে পারবে।');
+        }
+
+        function endCompetition() {
+            if (!confirm('⏹️ কম্পিটিশন বন্ধ করতে চান?')) return;
+            setCompetitionStatus(false);
+            isCompetitionActive = false;
+            alert('✅ কম্পিটিশন বন্ধ করা হয়েছে!');
+        }
+
+        function declareWinners() {
+            if (!confirm('🏅 বিজয়ী ঘোষণা করতে চান?')) return;
+
+            const scores = getScores();
+            const participants = getParticipants();
+
+            const entries = Object.entries(scores).map(([mobile, sc]) => {
+                const p = participants.find(part => part.mobile === mobile);
+                return { mobile, name: p ? p.name : 'অজানা', score: sc };
+            });
+
+            entries.sort((a, b) => b.score - a.score);
+            const winners = entries.slice(0, 3);
+
+            let msg = '🏆 **বিজয়ী ঘোষণা** 🏆\n\n';
+            const medals = ['🥇', '🥈', '🥉'];
+            const amounts = ['৫,০০০', '৩,০০০', '২,০০০'];
+
+            winners.forEach((w, i) => {
+                if (w) {
+                    msg += `${medals[i]} ${w.name} - ${w.score}/৫০ (পুরস্কার: ৳${amounts[i]})\n`;
+                }
+            });
+
+            if (winners.length === 0) {
+                msg = '😞 এখনো কেউ অংশগ্রহণ করেনি!';
+            }
+
+            alert(msg);
+            confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+        }
+
+        function resetAllData() {
+            if (!confirm('⚠️ সব ডেটা রিসেট করতে চান? এটি অপরিবর্তনীয়!')) return;
+            if (!confirm('আবারও নিশ্চিত করুন: সব অংশগ্রহণকারী ও স্কোর মুছে যাবে!')) return;
+
+            localStorage.removeItem('mp_participants');
+            localStorage.removeItem('mp_scores');
+            localStorage.removeItem('mp_activeCodes');
+            localStorage.removeItem('mp_competitionActive');
+
+            alert('✅ সব ডেটা রিসেট করা হয়েছে!');
+            location.reload();
+        }
+
+        // ===== UPDATE UI =====
+        function updateParticipantCount() {
+            const participants = getParticipants();
+            document.getElementById('participantCount').innerText = participants.length;
+            document.getElementById('adminTotal').innerText = participants.length;
+
+            const scores = getScores();
+            const active = participants.filter(p => scores[p.mobile] !== undefined);
+            document.getElementById('adminActive').innerText = active.length;
+
+            const values = Object.values(scores);
+            if (values.length > 0) {
+                const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                document.getElementById('adminAvg').innerText = avg.toFixed(1);
+            }
+        }
+
+        function updateAdminLeaderboard() {
+            const scores = getScores();
+            const participants = getParticipants();
+            const list = document.getElementById('adminLbList');
+
+            const entries = Object.entries(scores).map(([mobile, sc]) => {
+                const p = participants.find(part => part.mobile === mobile);
+                return {
+                    mobile,
+                    name: p ? p.name : 'অজানা',
+                    score: sc
+                };
+            });
+
+            entries.sort((a, b) => b.score - a.score);
+
+            if (entries.length === 0) {
+                list.innerHTML = '<div class="admin-lb-empty">⏳ এখনো কেউ অংশ নেয়নি...</div>';
+                return;
+            }
+
+            let html = '';
+            const medals = ['🥇', '🥈', '🥉'];
+            entries.forEach((e, i) => {
+                const cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+                const medal = i < 3 ? medals[i] : `<span style="color:#888;font-size:10px;">#${i+1}</span>`;
+                html += `
+                            <div class="admin-lb-item ${cls}">
+                                <span class="rank">${medal}</span>
+                                <span class="name">${e.name}</span>
+                                <span class="score">${e.score}/৫০</span>
+                            </div>
+                        `;
+            });
+
+            list.innerHTML = html;
+        }
+
+        // ===== AUDIO =====
+        let audioCtx = null, isMuted = false;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function toggleAudio(event) {
+            event.stopPropagation();
+            isMuted = !isMuted;
+            document.getElementById('audioBtn').innerText = isMuted ? '🔇' : '🔊';
+        }
+
+        function playSound(type) {
+            if (!audioCtx || isMuted) return;
+            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            if (type === 'correct') {
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } else if (type === 'wrong') {
+                osc.frequency.setValueAtTime(196.00, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(146.83, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // ===== UI HELPERS =====
+        function toggleMenu(event) {
+            event.stopPropagation();
+            document.getElementById('menuDropdown').classList.toggle('show');
+        }
+
+        function toggleTheme(event) {
+            event.stopPropagation();
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('themeBtn').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        function shareResult() {
+            const { finalScore } = calculateFinalScore();
+            const text = `আমি গাউসিয়া কমিটি বাংলাদেশের কুইজ কম্পিটিশনে ${finalScore}/৫০ স্কোর করেছি! 🏆\n✅ সঠিক: ${correctCount} | ❌ ভুল: ${wrongCount}\n\nযোগ দিন: ${window.location.href}`;
+            if (navigator.share) navigator.share({ title: 'কুইজ', text });
+            else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        // ===== INIT =====
+        window.onload = function() {
+            isCompetitionActive = getCompetitionStatus();
+            updateParticipantCount();
+            updateAdminLeaderboard();
+
+            setInterval(updateAdminLeaderboard, 3000);
+            setInterval(updateParticipantCount, 5000);
+
+            if (isCompetitionActive) {
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('startBtn').innerText = '🔓 এন্ট্রি কোড দিন';
+            }
+        };
+    </script>
+</body>
+</html>
