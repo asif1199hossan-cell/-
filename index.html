@@ -58,6 +58,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* ===== LOGO CENTER ===== */
         .logo-center {
             display: flex;
             justify-content: center;
@@ -107,6 +108,56 @@
         .prize-card .trophy { font-size: 20px; }
         .prize-card .amount { font-size: 14px; font-weight: bold; }
         .prize-card .label { font-size: 10px; color: #666; }
+
+        /* ===== সতর্কতা বক্স ===== */
+        .warning-box {
+            margin: 10px 0;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 10px;
+            border: 2px solid #ffc107;
+            text-align: center;
+            animation: pulseWarning 1.5s infinite alternate;
+        }
+
+        @keyframes pulseWarning {
+            from { border-color: #ffc107; }
+            to { border-color: #d32f2f; }
+        }
+
+        .warning-box p {
+            font-size: 14px;
+            font-weight: bold;
+            color: #856404;
+            margin: 0;
+        }
+
+        .warning-box .sub-text {
+            font-size: 11px;
+            color: #856404;
+            margin: 4px 0 0 0;
+            font-weight: normal;
+        }
+
+        /* ===== মেনু বাটন ===== */
+        .menu-item .menu-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .menu-item .menu-btn:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
 
         .entry-section {
             background: #f8f9fa;
@@ -243,6 +294,8 @@
         .lifeline-btn.ll-answer { background: #e8f5e9; color: #2e7d32; }
         .lifeline-btn.ll-poll { background: #fce4ec; color: #c62828; }
         .lifeline-btn.ll-guard { background: #f3e5f5; color: #6a1b9a; }
+        .lifeline-btn.ll-skip { background: #2196F3; color: white; }
+        .lifeline-btn.ll-hint { background: #9C27B0; color: white; }
 
         .lifeline-btn.active { box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); }
         .lifeline-btn.ll-5050.active { background: #0288d1; color: white; }
@@ -250,12 +303,8 @@
         .lifeline-btn.ll-answer.active { background: #2e7d32; color: white; }
         .lifeline-btn.ll-poll.active { background: #c62828; color: white; }
         .lifeline-btn.ll-guard.active { background: #6a1b9a; color: white; }
-        
-        /* নতুন মিস্টারি বক্স বাটন */
-        .lifeline-btn.ll-skip { background: #2196F3; color: white; }
-        .lifeline-btn.ll-skip.active { background: #0d47a1; }
-        .lifeline-btn.ll-hint { background: #9C27B0; color: white; }
-        .lifeline-btn.ll-hint.active { background: #4a148c; }
+        .lifeline-btn.ll-skip.active { background: #0d47a1; color: white; }
+        .lifeline-btn.ll-hint.active { background: #4a148c; color: white; }
 
         .buffs-panel {
             display: flex;
@@ -408,37 +457,6 @@
             75% { transform: translateX(6px); }
         }
 
-        body.dark-mode {
-            background: linear-gradient(-45deg, #0a2e0f, #101d33, #15294a, #050a0c);
-        }
-
-        .dark-mode .quiz-container {
-            background: rgba(30, 30, 30, 0.96);
-            color: #e0e0e0;
-            border-color: #333;
-        }
-
-        .dark-mode .question-text { color: #ffffff; }
-        .dark-mode .option-btn { background: #2d2d2d; border-color: #444; color: #eee; }
-        .dark-mode .name-input { background: #333; color: #fff; border-color: #555; }
-        .dark-mode .entry-section { background: #2d2d2d; border-color: #555; }
-        .dark-mode .prize-card { background: #2d2d2d; color: #ddd; }
-        .dark-mode .lifeline-btn { background: #3d3d3d; color: #aaa; }
-        .dark-mode .lifeline-btn.ll-5050 { background: #1a3a4a; color: #4fc3f7; }
-        .dark-mode .lifeline-btn.ll-time { background: #4a2a1a; color: #ffa726; }
-        .dark-mode .lifeline-btn.ll-answer { background: #1a3a1a; color: #66bb6a; }
-        .dark-mode .lifeline-btn.ll-poll { background: #4a1a1a; color: #ef5350; }
-        .dark-mode .lifeline-btn.ll-guard { background: #2a1a3a; color: #ab47bc; }
-        .dark-mode .lifeline-btn.ll-skip { background: #1a3a5a; color: #64b5f6; }
-        .dark-mode .lifeline-btn.ll-hint { background: #3a1a4a; color: #ce93d8; }
-        .dark-mode .lifeline-btn.ll-5050.active { background: #0288d1; color: white; }
-        .dark-mode .lifeline-btn.ll-time.active { background: #e65100; color: white; }
-        .dark-mode .lifeline-btn.ll-answer.active { background: #2e7d32; color: white; }
-        .dark-mode .lifeline-btn.ll-poll.active { background: #c62828; color: white; }
-        .dark-mode .lifeline-btn.ll-guard.active { background: #6a1b9a; color: white; }
-        .dark-mode .lifeline-btn.ll-skip.active { background: #0d47a1; color: white; }
-        .dark-mode .lifeline-btn.ll-hint.active { background: #4a148c; color: white; }
-
         .menu-container {
             position: absolute;
             top: 12px;
@@ -463,7 +481,7 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 170px;
+            width: 190px;
             padding: 8px;
             border: 1px solid #eee;
             text-align: left;
@@ -471,7 +489,6 @@
         }
 
         .menu-dropdown.show { display: block; }
-        .dark-mode .menu-dropdown { background: #252525; border-color: #444; color: #fff; }
 
         .menu-item {
             display: flex;
@@ -484,7 +501,7 @@
             border-bottom: 1px solid #f5f5f5;
         }
 
-        .dark-mode .menu-item { color: #ddd; border-color: #444; }
+        .menu-item:last-child { border-bottom: none; }
 
         .theme-toggle-btn,
         .audio-toggle-btn {
@@ -496,6 +513,7 @@
             font-size: 12px;
         }
 
+        /* Admin Panel */
         .admin-panel {
             background: #f8f9fa;
             border-radius: 14px;
@@ -626,15 +644,6 @@
             font-weight: normal;
         }
 
-        .dark-mode .winner-announce {
-            background: linear-gradient(135deg, #2d2d2d, #3d3d3d);
-            color: #f1c40f;
-            border: 1px solid #f1c40f;
-        }
-
-        .dark-mode .winner-announce .date { color: #f1c40f; }
-        .dark-mode .winner-announce .label { color: #aaa; }
-
         .mystery-overlay {
             position: fixed;
             inset: 0;
@@ -672,12 +681,75 @@
             to { transform: translateY(-15px); }
         }
 
-        .dark-mode .mystery-box-card {
-            background: linear-gradient(135deg, #2d2d2d, #3d3d3d);
-            color: #fff;
-            border: 1px solid #f1c40f;
+        /* ===== ডার্ক মোড ===== */
+        body.dark-mode {
+            background: linear-gradient(-45deg, #0a2e0f, #101d33, #15294a, #050a0c);
         }
 
+        .dark-mode .quiz-container {
+            background: rgba(30, 30, 30, 0.96);
+            color: #e0e0e0;
+            border-color: #333;
+        }
+
+        .dark-mode .question-text { color: #ffffff; }
+        .dark-mode .option-btn { background: #2d2d2d; border-color: #444; color: #eee; }
+        .dark-mode .name-input { background: #333; color: #fff; border-color: #555; }
+        .dark-mode .entry-section { background: #2d2d2d; border-color: #555; }
+        .dark-mode .prize-card { background: #2d2d2d; color: #ddd; }
+        .dark-mode .lifeline-btn { background: #3d3d3d; color: #aaa; }
+        .dark-mode .lifeline-btn.ll-5050 { background: #1a3a4a; color: #4fc3f7; }
+        .dark-mode .lifeline-btn.ll-time { background: #4a2a1a; color: #ffa726; }
+        .dark-mode .lifeline-btn.ll-answer { background: #1a3a1a; color: #66bb6a; }
+        .dark-mode .lifeline-btn.ll-poll { background: #4a1a1a; color: #ef5350; }
+        .dark-mode .lifeline-btn.ll-guard { background: #2a1a3a; color: #ab47bc; }
+        .dark-mode .lifeline-btn.ll-skip { background: #1a3a5a; color: #64b5f6; }
+        .dark-mode .lifeline-btn.ll-hint { background: #3a1a4a; color: #ce93d8; }
+        .dark-mode .lifeline-btn.ll-5050.active { background: #0288d1; color: white; }
+        .dark-mode .lifeline-btn.ll-time.active { background: #e65100; color: white; }
+        .dark-mode .lifeline-btn.ll-answer.active { background: #2e7d32; color: white; }
+        .dark-mode .lifeline-btn.ll-poll.active { background: #c62828; color: white; }
+        .dark-mode .lifeline-btn.ll-guard.active { background: #6a1b9a; color: white; }
+        .dark-mode .lifeline-btn.ll-skip.active { background: #0d47a1; color: white; }
+        .dark-mode .lifeline-btn.ll-hint.active { background: #4a148c; color: white; }
+        .dark-mode .menu-dropdown { background: #252525; border-color: #444; color: #fff; }
+        .dark-mode .menu-item { color: #ddd; border-color: #444; }
+        .dark-mode .winner-announce { background: linear-gradient(135deg, #2d2d2d, #3d3d3d); color: #f1c40f; border: 1px solid #f1c40f; }
+        .dark-mode .winner-announce .date { color: #f1c40f; }
+        .dark-mode .winner-announce .label { color: #aaa; }
+        .dark-mode .mystery-box-card { background: linear-gradient(135deg, #2d2d2d, #3d3d3d); color: #fff; border: 1px solid #f1c40f; }
+        .dark-mode .admin-leaderboard { background: #2d2d2d; color: #ddd; }
+        .dark-mode .admin-leaderboard h5 { border-color: #444; }
+        .dark-mode .admin-lb-item { background: rgba(255, 255, 255, 0.03); color: #ddd; }
+        .dark-mode .admin-lb-item .score { background: #1a3a1a; color: #2ecc71; }
+        .dark-mode .admin-lb-item.top1 .score { background: #333; color: #f1c40f; }
+        .dark-mode .admin-lb-item.top2 .score { background: #333; color: #bdbdbd; }
+        .dark-mode .admin-lb-item.top3 .score { background: #333; color: #ffa726; }
+
+        /* ===== ডার্ক মোডে সতর্কতা ===== */
+        .dark-mode .warning-box {
+            background: #2d2d2d !important;
+            border-color: #f1c40f !important;
+        }
+
+        .dark-mode .warning-box p {
+            color: #f1c40f !important;
+        }
+
+        .dark-mode .warning-box .sub-text {
+            color: #aaa !important;
+        }
+
+        .dark-mode .menu-item .menu-btn {
+            background: #1a3a1a;
+            color: #66bb6a;
+        }
+
+        .dark-mode .menu-item .menu-btn:hover {
+            background: #2a4a2a;
+        }
+
+        /* ===== রেস্পন্সিভ ===== */
         @media (max-width: 480px) {
             .prize-section { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
             .prize-card .trophy { font-size: 18px; }
@@ -689,19 +761,12 @@
             .lifeline-btn { font-size: 10px; padding: 3px 8px; }
             .mystery-box-card { padding: 25px 15px; }
             .mystery-gift-icon { font-size: 50px; }
+            .menu-dropdown { width: 180px; right: -10px; }
         }
 
         .admin-leaderboard::-webkit-scrollbar { width: 3px; }
         .admin-leaderboard::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); border-radius: 10px; }
         .admin-leaderboard::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
-        .dark-mode .admin-leaderboard { background: #2d2d2d; color: #ddd; }
-        .dark-mode .admin-leaderboard h5 { border-color: #444; }
-        .dark-mode .admin-lb-item { background: rgba(255, 255, 255, 0.03); color: #ddd; }
-        .dark-mode .admin-lb-item .score { background: #1a3a1a; color: #2ecc71; }
-        .dark-mode .admin-lb-item.top1 .score { background: #333; color: #f1c40f; }
-        .dark-mode .admin-lb-item.top2 .score { background: #333; color: #bdbdbd; }
-        .dark-mode .admin-lb-item.top3 .score { background: #333; color: #ffa726; }
     </style>
 </head>
 <body>
@@ -712,6 +777,10 @@
             <div class="menu-container">
                 <button class="three-dot-btn" onclick="toggleMenu(event)">⋮</button>
                 <div class="menu-dropdown" id="menuDropdown">
+                    <!-- ===== নিয়মাবলী ===== -->
+                    <div class="menu-item" style="border-bottom:1px solid #f5f5f5; justify-content:center; padding-bottom:6px; margin-bottom:4px;">
+                        <button class="menu-btn" onclick="showRules()">📋 কম্পিটিশনের নিয়মাবলী</button>
+                    </div>
                     <div class="menu-item">
                         <span>সাউন্ড:</span>
                         <button class="audio-toggle-btn" onclick="toggleAudio(event)" id="audioBtn">🔊</button>
@@ -743,6 +812,12 @@
                     <div class="prize-card bronze"><div class="trophy">🥉</div><div class="amount">৳২,০০০</div><div class="label">৩য়</div></div>
                 </div>
 
+                <!-- ===== সতর্কতা বক্স ===== -->
+                <div class="warning-box">
+                    <p>⚠️ <span style="color:#d32f2f;">চুরি করলে আল্লাহ কাছে দায়বদ্ধ থাকবেন</span> ⚠️</p>
+                    <p class="sub-text">কোনো অসৎ উপায়ে উত্তর খোঁজা সম্পূর্ণ নিষিদ্ধ</p>
+                </div>
+
                 <div class="entry-section" id="entrySection">
                     <div class="entry-badge">🎫 এন্ট্রি কোড</div>
                     <div class="entry-input-group">
@@ -767,8 +842,8 @@
             <!-- Quiz Content -->
             <div id="quizContent" style="display:none;">
                 <div class="stats-row">
-                    <div class="badge step-badge" id="stepDisplay">প্রশ্ন: ১</div>
-                    <div class="badge timer-badge" id="timerBadge">⏱ <span id="time">60</span>সে.</div>
+                    <div class="badge step-badge" id="stepDisplay">প্রশ্ন: ১/৫০</div>
+                    <div class="badge timer-badge" id="timerBadge">⏱ <span id="time">180</span>সে.</div>
                 </div>
 
                 <div class="lifelines-bar">
@@ -813,12 +888,8 @@
 
                 <div class="winner-announce">
                     <div class="label">🏅 বিজয়ী ঘোষণা</div>
-                    <div class="date" id="winnerDate">
-                        📅 শনিবার, ২০ জুন ২০২৬ | সন্ধ্যা ৭:০০ টা
-                    </div>
-                    <div style="font-size:11px; color:#666; margin-top:2px; font-weight:normal;">
-                        ⏳ ফলাফল ও পুরস্কার বিতরণ অনুষ্ঠানে যোগ দিন
-                    </div>
+                    <div class="date" id="winnerDate">📅 শনিবার, ২০ জুন ২০২৬ | সন্ধ্যা ৭:০০ টা</div>
+                    <div style="font-size:11px; color:#666; margin-top:2px; font-weight:normal;">⏳ ফলাফল ও পুরস্কার বিতরণ অনুষ্ঠানে যোগ দিন</div>
                 </div>
 
                 <p id="saveMsg" style="font-weight:bold; margin-bottom:12px; color:#f39c12; font-size:12px; text-align:center;"></p>
@@ -854,8 +925,9 @@
     </div>
 
     <script>
-        // ===== CONFIGURATION =====
+        // আপনার URL বসান:
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyj5CN0CHF7s229xjjmviIFvqc2KYUm8R__NM2pmGuAmfPcQJw03jccvL4VmM_wBPm1Fw/exec";
+        // ===== CONFIG =====
         const ADMIN_PASSWORD = "2004";
 
         // ===== STATE =====
@@ -865,7 +937,7 @@
             currentIdx = 0,
             correctCount = 0,
             wrongCount = 0,
-            totalTime = 60,
+            totalTime = 180, // সময় ১৮০ সেকেন্ড করা হয়েছে
             timer;
         let playerName = "",
             playerMobile = "",
@@ -904,7 +976,7 @@
             "bonus"
         ];
 
-        // ===== LOCAL STORAGE HELPERS =====
+        // ===== SHARED DATA =====
         function getParticipants() {
             return JSON.parse(localStorage.getItem('mp_participants') || '[]');
         }
@@ -1184,48 +1256,92 @@
             { q: "আল্লাহর কুরসির নিচে কী আছে?", a: "আসমান", b: "জমিন", c: "জান্নাত", d: "জাহান্নাম", ans: "a" }
         ];
 
-        // ===== ৩টি স্টেপের জন্য ৫০টি করে প্রশ্ন সিলেক্ট =====
-        function getQuestionsForStep(step) {
-            shuffle(easyQuestions);
-            shuffle(mediumQuestions);
-            shuffle(hardQuestions);
-            
-            let selectedEasy = [], selectedMedium = [], selectedHard = [];
-            
-            if (step === 1) {
-                selectedEasy = easyQuestions.slice(0, 7);
-                selectedMedium = mediumQuestions.slice(0, 5);
-                selectedHard = hardQuestions.slice(0, 5);
-            } else if (step === 2) {
-                selectedEasy = easyQuestions.slice(0, 7);
-                selectedMedium = mediumQuestions.slice(0, 5);
-                selectedHard = hardQuestions.slice(0, 5);
-            } else {
-                selectedEasy = easyQuestions.slice(0, 6);
-                selectedMedium = mediumQuestions.slice(0, 5);
-                selectedHard = hardQuestions.slice(0, 5);
-            }
-            
-            let combined = [...selectedEasy, ...selectedMedium, ...selectedHard];
-            shuffle(combined);
-            return combined;
-        }
-
+        // ===== ৩টি স্টেপের জন্য প্রশ্ন সিলেক্ট (কোনো প্রশ্ন রিপিট হবে না) =====
+function getQuestionsForStep(step) {
+    // প্রতিটি স্টেপের জন্য আলাদা কপি ব্যবহার করুন (মূল অ্যারে পরিবর্তন হবে না)
+    const easyCopy = [...easyQuestions];
+    const mediumCopy = [...mediumQuestions];
+    const hardCopy = [...hardQuestions];
+    
+    // শাফল করুন
+    shuffle(easyCopy);
+    shuffle(mediumCopy);
+    shuffle(hardCopy);
+    
+    let selectedEasy = [], selectedMedium = [], selectedHard = [];
+    
+    if (step === 1) {
+        selectedEasy = easyCopy.slice(0, 7);
+        selectedMedium = mediumCopy.slice(0, 5);
+        selectedHard = hardCopy.slice(0, 5);
+    } else if (step === 2) {
+        selectedEasy = easyCopy.slice(0, 7);
+        selectedMedium = mediumCopy.slice(0, 5);
+        selectedHard = hardCopy.slice(0, 5);
+    } else {
+        selectedEasy = easyCopy.slice(0, 6);
+        selectedMedium = mediumCopy.slice(0, 5);
+        selectedHard = hardCopy.slice(0, 5);
+    }
+    
+    let combined = [...selectedEasy, ...selectedMedium, ...selectedHard];
+    shuffle(combined);
+    return combined;
+}
         // ===== QUIZ ENGINE =====
         let currentStepQuestions = [];
 
-        function loadStep(s) {
-            currentStep = s;
-            currentIdx = 0;
-            
-            const stepQ = getQuestionsForStep(s);
-            currentStepQuestions = stepQ.map(q => shuffleOptions(q));
-            
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('quizContent').style.display = 'block';
-            renderQ();
-            if (s === 1) startTimer();
+       function loadStep(s) {
+    currentStep = s;
+    currentIdx = 0;
+    
+    // আগের স্টেপের প্রশ্নগুলো সংগ্রহ করুন (ডুপ্লিকেট চেকের জন্য)
+    let usedQuestions = [];
+    if (s > 1) {
+        // আগের স্টেপের প্রশ্নগুলো সংগ্রহ
+        for (let i = 1; i < s; i++) {
+            const prevQ = getQuestionsForStep(i);
+            usedQuestions = usedQuestions.concat(prevQ.map(q => q.q));
         }
+    }
+    
+    // নতুন প্রশ্ন নিন
+    let newQuestions = getQuestionsForStep(s);
+    
+    // ডুপ্লিকেট চেক করুন - আগের স্টেপের সাথে মিল থাকলে বাদ দিন
+    let uniqueQuestions = newQuestions.filter(q => !usedQuestions.includes(q.q));
+    
+    // যদি ৫০টি ইউনিক প্রশ্ন না থাকে, তাহলে বাকি পূরণ করুন
+    let attempts = 0;
+    while (uniqueQuestions.length < 50 && attempts < 10) {
+        attempts++;
+        const extraQ = getQuestionsForStep(s);
+        for (const q of extraQ) {
+            if (!usedQuestions.includes(q.q) && !uniqueQuestions.some(uq => uq.q === q.q)) {
+                uniqueQuestions.push(q);
+                if (uniqueQuestions.length >= 50) break;
+            }
+        }
+    }
+    
+    // যদি এখনও ৫০টি না হয়, তাহলে ডুপ্লিকেট এলেও নিন (কোনো প্রশ্ন না পাওয়ার ক্ষেত্রে)
+    if (uniqueQuestions.length < 50) {
+        const remaining = getQuestionsForStep(s);
+        for (const q of remaining) {
+            if (!uniqueQuestions.some(uq => uq.q === q.q)) {
+                uniqueQuestions.push(q);
+                if (uniqueQuestions.length >= 50) break;
+            }
+        }
+    }
+    
+    currentStepQuestions = uniqueQuestions.slice(0, 50).map(q => shuffleOptions(q));
+    
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('quizContent').style.display = 'block';
+    renderQ();
+    if (s === 1) startTimer();
+}
 
         function shuffleOptions(question) {
             const options = [
@@ -1257,7 +1373,16 @@
 
         function renderQ() {
             const q = currentStepQuestions[currentIdx];
-            const questionNum = ((currentStep - 1) * 50) + currentIdx + 1;
+            
+            // মোট প্রশ্ন গণনা (বর্তমান পর্যন্ত)
+            let totalQuestions = 0;
+            for (let i = 1; i < currentStep; i++) {
+                const stepQ = getQuestionsForStep(i);
+                totalQuestions += stepQ.length;
+            }
+            const questionNum = totalQuestions + currentIdx + 1;
+            
+            // বাংলা ও ইংরেজি মিলিয়ে "প্রশ্ন: ৫/৫০" ফরম্যাট
             document.getElementById('stepDisplay').innerText = 'প্রশ্ন: ' + questionNum + '/৫০';
             document.getElementById('question').innerHTML = q.q;
 
@@ -1361,10 +1486,11 @@
             hintUsedForCurrentQ = false;
             
             currentIdx++;
-            if (currentIdx < 50) { 
-                renderQ(); 
-            } else if (currentStep < 3) { 
-                loadStep(currentStep + 1); 
+            // currentStepQuestions.length ব্যবহার করুন (সঠিকভাবে কাজ করবে)
+            if (currentIdx < currentStepQuestions.length) {
+                renderQ();
+            } else if (currentStep < 3) {
+                loadStep(currentStep + 1);
             } else {
                 showFinalResult();
             }
@@ -1378,8 +1504,6 @@
             }
             if (!quizActive) return;
             
-            // স্কিপ ব্যবহার করার জন্য check ফাংশনে হ্যান্ডেল করা হবে
-            // বাটনটি প্রেস করলে check ফাংশনে গিয়ে স্কিপ হবে
             document.getElementById('llSkip').classList.add('active');
             alert('⏭️ "স্কিপ" বাটনটি সক্রিয়! পরবর্তী প্রশ্নে যেতে একটি অপশনে ক্লিক করুন।');
         }
@@ -1439,7 +1563,6 @@
             let reward = mysteryRewards[Math.floor(Math.random() * mysteryRewards.length)];
             let msg = '';
 
-            // Bonus: আরও ১টি রিওয়ার্ড পাবেন
             if (reward === 'bonus') {
                 reward = mysteryRewards[Math.floor(Math.random() * mysteryRewards.length)];
                 msg = '🎁 বোনাস! আরও ১টি রিওয়ার্ড পেলেন!\n\n';
@@ -1595,7 +1718,6 @@
             document.getElementById('llAnswer').disabled = stateAnswer;
             document.getElementById('llPoll').disabled = statePoll;
             document.getElementById('llGuard').disabled = stateGuard;
-            // স্কিপ ও হিন্ট বাটন সবসময় সক্রিয় থাকবে (কিন্তু ফাংশন চেক করবে রিওয়ার্ড আছে কিনা)
         }
 
         function use5050() {
@@ -2003,6 +2125,63 @@
             else window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
+        // ===== কম্পিটিশনের নিয়মাবলী =====
+        function showRules() {
+            const rules = `
+📋 **গাউসিয়া কমিটি কুইজ কম্পিটিশন ২০২৬ - নিয়মাবলী**
+
+📌 **১. অংশগ্রহণের শর্ত:**
+• শুধুমাত্র বৈধ এন্ট্রি কোডধারী ব্যক্তিরা অংশ নিতে পারবেন।
+• প্রতিটি মোবাইল নম্বর ব্যবহার করে শুধুমাত্র একবার অংশগ্রহণ করা যাবে।
+• প্রতিটি ডিভাইস থেকে শুধুমাত্র একবার অংশগ্রহণ করা যাবে।
+
+📌 **২. সময়সীমা:**
+• প্রতিটি প্রশ্নের জন্য ১৮০ সেকেন্ড সময় থাকবে।
+• মোট ৫০টি প্রশ্ন থাকবে (৩টি স্টেপে)।
+• সময় শেষ হলে স্বয়ংক্রিয়ভাবে ফলাফল দেখাবে।
+
+📌 **৩. স্কোরিং:**
+• প্রতিটি সঠিক উত্তরের জন্য +১ পয়েন্ট।
+• প্রতিটি ভুল উত্তরের জন্য -৫ সেকেন্ড সময় কাটা হবে।
+• প্রতি ৪টি ভুল উত্তরের জন্য -১ পয়েন্ট কাটা হবে।
+• টানা ১০টি সঠিক উত্তর দিলে 'মিস্টারি বক্স' পাবেন।
+
+📌 **৪. লাইফলাইন:**
+• 💡 ৫০:৫০ - ২টি ভুল অপশন বাদ দেয়।
+• ⏱️ +৩০ সেকেন্ড - অতিরিক্ত সময় বোনাস।
+• 🎯 সঠিক উত্তর - সরাসরি সঠিক উত্তর দেখে নিন।
+• 👥 পোল - অডিয়েন্স পোল দেখুন।
+• 🛡️ লাইফ গার্ড - ভুল উত্তরে রক্ষা পাবেন।
+
+📌 **৫. মিস্টারি বক্স রিওয়ার্ড:**
+• 🛡️ লাইফ গার্ড - পরবর্তী ১টি ভুল থেকে রক্ষা
+• ⏱️ +২০/৩০/৫০/৬০ সেকেন্ড বোনাস
+• 🎯 ফ্রি স্কোর - +১ পয়েন্ট
+• 🔥 ডাবল স্কোর - পরবর্তী সঠিক উত্তরে +২ পয়েন্ট
+• ⏭️ স্কিপ প্রশ্ন - একটি প্রশ্ন এড়িয়ে যান
+• 💡 হিন্ট - উত্তরের প্রথম অক্ষর দেখুন
+• 🎁 লাইফলাইন রিস্টোর - একটি ব্যবহার করা লাইফলাইন ফিরে পান
+
+📌 **৬. সতর্কতা:**
+⚠️ **চুরি করলে আল্লাহ কাছে দায়বদ্ধ থাকবেন।**
+• কোনো ধরনের অসৎ উপায়ে উত্তর খোঁজা নিষিদ্ধ।
+• একাধিক ডিভাইস/অ্যাকাউন্ট ব্যবহার করে অংশগ্রহণ করা যাবে না।
+• নিয়ম ভঙ্গ করলে অংশগ্রহণ বাতিল হবে।
+• ডান-ক্লিক, কপি-পেস্ট, ডেভেলপার টুলস ব্যবহার নিষিদ্ধ।
+
+📌 **৭. পুরস্কার:**
+🥇 ১ম স্থান: ৳৫,০০০
+🥈 ২য় স্থান: ৳৩,০০০
+🥉 ৩য় স্থান: ৳২,০০০
+
+📅 **বিজয়ী ঘোষণা:** শনিবার, ২০ জুন ২০২৬ | সন্ধ্যা ৭:০০ টা
+
+💪 **শুভকামনা! আল্লাহ আপনাদের সহায় হোন।**
+            `;
+            
+            alert(rules);
+        }
+
         // ===== INIT =====
         window.onload = function() {
             isCompetitionActive = getCompetitionStatus();
@@ -2017,6 +2196,12 @@
                 document.getElementById('startBtn').innerText = '🔓 এন্ট্রি কোড দিন';
             }
         };
+
+        // বাইরে ক্লিক করলে মেনু বন্ধ
+        document.addEventListener('click', function() {
+            document.getElementById('menuDropdown').classList.remove('show');
+        });
     </script>
 </body>
 </html>
+
